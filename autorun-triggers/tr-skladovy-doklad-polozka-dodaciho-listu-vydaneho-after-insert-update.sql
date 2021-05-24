@@ -1,13 +1,8 @@
-Use S4_Agenda_PEMA;
-GO
-
 CREATE OR ALTER TRIGGER TR_SkladovyDoklad_PolozkaDodacihoListuVydaneho_AfterInsert
 ON SkladovyDoklad_PolozkaDodacihoListuVydaneho
 AFTER INSERT, UPDATE
 AS
 BEGIN
-    
-	
 	/* 
 		MnozstviPozn_UserData:
 		* posledni kus

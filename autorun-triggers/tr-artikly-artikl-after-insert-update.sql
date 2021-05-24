@@ -1,11 +1,8 @@
-USE S4_Agenda_PEMA;
-GO
-
 CREATE OR ALTER TRIGGER TR_Artikly_Artikl_AfterInsertUpdate
 ON Artikly_Artikl
 AFTER INSERT, UPDATE
 AS
-BEGIN;
+BEGIN
 	-- produktove klice - spoji jako retezec do UserData pole
 	UPDATE Artikly_Artikl SET 
 		Artikly_Artikl.Priznaky_UserData=SQ.Priznaky_UserData

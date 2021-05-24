@@ -1,11 +1,9 @@
-Use S4_Agenda_PEMA;
-GO
-
 CREATE OR ALTER TRIGGER TR_Ceniky_PolozkaCeniku_AfterInsertUpdate
 ON Ceniky_PolozkaCeniku
 AFTER INSERT, UPDATE
 AS
-BEGIN;
+BEGIN
+
 	DECLARE @VychoziCenik_ID AS UNIQUEIDENTIFIER;
 	SET @VychoziCenik_ID = (SELECT TOP 1 Agenda.VychoziCenik_ID FROM System_AgendaDetail AS Agenda);
 

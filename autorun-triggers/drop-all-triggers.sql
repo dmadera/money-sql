@@ -1,6 +1,3 @@
-USE S4_Agenda_PEMA;
-GO
-
 DECLARE @sql NVARCHAR(MAX) = N'';
 
 SELECT  QUOTENAME(t.name) AS DeletedTrigger

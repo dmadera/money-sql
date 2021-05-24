@@ -1,5 +1,3 @@
-use S4_Agenda_PEMA;
-
 SELECT 
      sysobjects.name AS trigger_name 
     ,USER_NAME(sysobjects.uid) AS trigger_owner 

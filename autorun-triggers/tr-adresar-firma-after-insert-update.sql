@@ -1,13 +1,10 @@
-Use S4_Agenda_PEMA;
-GO
-
 CREATE OR ALTER TRIGGER TR_Adresar_Firma_AfterInsertUpdate
 ON Adresar_Firma
 AFTER INSERT, UPDATE
 AS
-BEGIN;
+BEGIN
 	
-	-- pokud u firmy neexistuje osoba "PREB", vytvoøí kopií osobu 
+	-- pokud u firmy neexistuje osoba "PREB", vytvorit kopii osobu 
 	INSERT INTO Adresar_Osoba (
 		Parent_ID, Root_ID, Group_ID, Deleted, Locked, Create_ID, Create_Date, Modify_ID, Modify_Date, Kod, Poznamka, 
 		Jmeno, Prijmeni, TitulPred, TitulZa, Pohlavi, Funkce, AdresaMisto, AdresaNazev, AdresaPsc, AdresaStat, AdresaUlice, 
@@ -22,7 +19,7 @@ BEGIN;
 		TelefonSpojeni4_ID, FunkceOsoby_ID, OsloveniProEmail, DatumNarozeni, System_Komentar, System_Priznak, TitulPred_ID, TitulZa_ID		
 	)
 	SELECT 
-		inserted.ID, inserted.ID, Osoba.Group_ID, Osoba.Deleted, Osoba.Locked, inserted.Modify_ID, inserted.Modify_Date, inserted.Modify_ID, inserted.Modify_Date, Osoba.Kod, Osoba.Poznamka, 
+		Firma.ID, Firma.ID, Osoba.Group_ID, Osoba.Deleted, Osoba.Locked, ISNULL(Firma.Modify_ID, Firma.Create_ID), GETDATE(), Firma.Modify_ID, Firma.Modify_Date, Osoba.Kod, Osoba.Poznamka, 
 		Osoba.Jmeno, Osoba.Prijmeni, Osoba.TitulPred, Osoba.TitulZa, Osoba.Pohlavi, Osoba.Funkce, Osoba.AdresaMisto, Osoba.AdresaNazev, Osoba.AdresaPsc, Osoba.AdresaStat, Osoba.AdresaUlice, 
 		Osoba.CisloOsoby, Osoba.CisloS3, Osoba.DatumPosty, Osoba.Email, Osoba.KrestniJmeno, Osoba.Nazev, Osoba.Osloveni, Osoba.PosilatPostu, Osoba.Spojeni, 
 		Osoba.Tel1Cislo, Osoba.Tel1Klapka, Osoba.Tel1MistniCislo, Osoba.Tel1Predvolba, Osoba.Tel1Typ, 
@@ -33,15 +30,15 @@ BEGIN;
 		Osoba.Hidden, Osoba.Tel1StatID, Osoba.Tel2StatID, Osoba.Tel3StatID, Osoba.Tel4StatID, Osoba.FaxCislo, Osoba.FaxMistniCislo, Osoba.FaxPredvolba, Osoba.FaxPredvolbaStat, 
 		Osoba.FaxStatID, Osoba.FaxKlapka, Osoba.Attachments, Osoba.EmailSpojeni_ID, Osoba.FaxSpojeni_ID, Osoba.TelefonSpojeni1_ID, Osoba.TelefonSpojeni2_ID, Osoba.TelefonSpojeni3_ID, 
 		Osoba.TelefonSpojeni4_ID, Osoba.FunkceOsoby_ID, Osoba.OsloveniProEmail, Osoba.DatumNarozeni, Osoba.System_Komentar, Osoba.System_Priznak, Osoba.TitulPred_ID, Osoba.TitulZa_ID
-	FROM inserted
+	FROM inserted AS Firma
 	LEFT JOIN ( 
 		SELECT DISTINCT Firma.ID AS ID
 		FROM inserted AS Firma
 		INNER JOIN Adresar_Osoba AS Osoba ON Osoba.Parent_ID = Firma.ID
 		WHERE Osoba.FunkceOsoby_ID = (SELECT TOP 1 ID FROM Adresar_FunkceOsoby AS Funkce WHERE Funkce.Code = 'PRE')
-	) AS NotFirma ON NotFirma.ID = inserted.ID
+	) AS NotFirma ON NotFirma.ID = Firma.ID
 	INNER JOIN Adresar_Osoba AS Osoba ON Osoba.Kod = 'AD00001PRE'
-	WHERE NotFirma.ID IS NULL;
+	WHERE NotFirma.ID IS NULL AND Osoba.ID IS NOT NULL;
 
 	-- aktualizuje data prebirajici osoby
 	UPDATE Adresar_Osoba SET
@@ -52,7 +49,7 @@ BEGIN;
 		Tel1Cislo = IIF(SpojeniPreb.ID IS NULL, SpojeniTel.SpojeniCislo, SpojeniPreb.SpojeniCislo),
 		TelefonSpojeni1_ID = IIF(SpojeniPreb.ID IS NULL, SpojeniTel.ID, SpojeniPreb.ID)
 	FROM Adresar_Osoba AS Osoba
-	INNER JOIN inserted AS Firma ON Firma.ID = Osoba.Parent_ID
+	INNER JOIN Adresar_Firma AS Firma ON Firma.ID = Osoba.Parent_ID
 	LEFT JOIN (
 		SELECT Spojeni.ID, Spojeni.Parent_ID, Spojeni.Popis, Spojeni.SpojeniCislo
 		FROM Adresar_Spojeni AS Spojeni
@@ -63,7 +60,13 @@ BEGIN;
 		SELECT Spojeni.ID, Spojeni.Parent_ID, Spojeni.Popis, Spojeni.SpojeniCislo
 		FROM Adresar_Spojeni AS Spojeni
 		INNER JOIN Adresar_TypSpojeni AS TypSpojeni ON TypSpojeni.ID = Spojeni.TypSpojeni_ID
-		WHERE TypSpojeni.Kod = 'Tel'
+		INNER JOIN (
+			SELECT Spojeni.Parent_ID, MIN(LEN(TypSpojeni.Kod)) AS LenTypSpoj
+			FROM Adresar_Spojeni AS Spojeni
+			INNER JOIN Adresar_TypSpojeni AS TypSpojeni ON TypSpojeni.ID = Spojeni.TypSpojeni_ID
+			WHERE TypSpojeni.Kod LIKE 'Tel%' AND Spojeni.Popis != ''
+			GROUP BY Spojeni.Parent_ID
+		) AS SQ ON SQ.Parent_ID = Spojeni.Parent_ID AND TypSpojeni.Kod LIKE 'Tel%' AND Spojeni.Popis != '' AND LEN(TypSpojeni.Kod) = SQ.LenTypSpoj
 	) AS SpojeniTel ON SpojeniTel.Parent_ID = Firma.ID;
 
 	UPDATE Adresar_Firma SET 
@@ -95,4 +98,4 @@ BEGIN;
 		GROUP BY FirCinnost.Parent_ID, Cinnost.Kod
 	) AS FirCinnost ON FirCinnost.Parent_ID = Firma.ID
 	LEFT JOIN Adresar_Osoba AS Osoba ON Osoba.Parent_ID = Firma.ID AND Osoba.FunkceOsoby_ID = (SELECT TOP 1 ID FROM Adresar_FunkceOsoby AS Funkce WHERE Funkce.Code = 'PRE');
-END;
+END

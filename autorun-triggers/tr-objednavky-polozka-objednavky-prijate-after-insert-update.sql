@@ -1,12 +1,8 @@
-Use S4_Agenda_PEMA;
-GO
-
 CREATE OR ALTER TRIGGER TR_Objednavky_PolozkaObjednavkyPrijate_AfterInsertUpdate
 ON Objednavky_PolozkaObjednavkyPrijate
 AFTER INSERT, UPDATE
 AS
 BEGIN
-    
 	
 	/* marze, nakupni cena do polozky */
 	UPDATE Objednavky_PolozkaObjednavkyPrijate SET

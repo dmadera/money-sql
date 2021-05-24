@@ -1,14 +1,9 @@
-Use S4_Agenda_PEMA;
-GO
-
 CREATE OR ALTER TRIGGER TR_SkladovyDoklad_ProdejkaVydana_AfterInsertUpdate
 ON SkladovyDoklad_ProdejkaVydana
 AFTER INSERT, UPDATE
 AS
 BEGIN
-    
 
-	
 	UPDATE Ucetnictvi_InterniDoklad SET
 		ID = ID.ID
 	FROM Ucetnictvi_InterniDoklad AS ID

@@ -1,6 +1,3 @@
-Use S4_Agenda_PEMA;
-GO
-
 CREATE OR ALTER TRIGGER TR_Ucetnictvi_InterniDoklad
 ON Ucetnictvi_InterniDoklad
 AFTER UPDATE
@@ -9,23 +6,23 @@ BEGIN
 	UPDATE Ucetnictvi_InterniDoklad SET 
 		Nazev = CASE
 			WHEN PR.Deleted = 1 
-				THEN 'Neplatn˝ öek - doklad zruöen'
+				THEN 'Neplatn√Ω ≈°ek - doklad zru≈°en'
 			WHEN PR.Deleted = 0 AND (PR.SumaCelkem < 5000 OR (Fir.VlastniSleva = 1 AND Fir.HodnotaSlevy <> 0) OR (
 					SELECT COUNT(FirAdrKl.ID) FROM Adresar_FirmaAdresniKlic AS FirAdrKl 
 					INNER JOIN  Adresar_AdresniKlic AS AdrKlic ON AdrKlic.ID = FirAdrKl.AdresniKlic_ID
 					WHERE FirAdrKl.Parent_ID = PR.Firma_ID AND AdrKlic.Kod = '-SEK') <> 0) 
-				THEN 'Neplatn˝ öek - doklad nesplÚuje poûadavky'
+				THEN 'Neplatn√Ω ≈°ek - doklad nespl≈àuje po≈æadavky'
 			WHEN PR.Deleted = 0 AND ROUND(CASE 
 					WHEN PR.SumaCelkem >= 10000 THEN PR.SumaCelkem / 100 * 1.5
 					WHEN PR.SumaCelkem >= 5000 THEN PR.SumaCelkem / 100 * 1
 					ELSE PD.SumaCelkem END, 0) <> PD.SumaCelkem
-				THEN CONCAT('Neplatn˝ öek - opravte na Ë·stku ', CONVERT(NUMERIC(10,2), ROUND(CASE 
+				THEN CONCAT('Neplatn√Ω ≈°ek - opravte na ƒç√°stku ', CONVERT(NUMERIC(10,2), ROUND(CASE 
 					WHEN PR.SumaCelkem >= 10000 THEN PR.SumaCelkem / 100 * 1.5
 					WHEN PR.SumaCelkem >= 5000 THEN PR.SumaCelkem / 100 * 1
-					ELSE PD.SumaCelkem END, 0)), ' KË')
+					ELSE PD.SumaCelkem END, 0)), ' Kƒç')
 			WHEN PR.Deleted = 0 AND PR.Firma_ID <> PD.Firma_ID 
-				THEN CONCAT('Neplatn˝ öek - opravte na odbÏratele ', Fir.Kod)
-			ELSE 'Vydan˝ öek'
+				THEN CONCAT('Neplatn√Ω ≈°ek - opravte na odbƒõratele ', Fir.Kod)
+			ELSE 'Vydan√Ω ≈°ek'
 		END
 	FROM Ucetnictvi_InterniDoklad AS PD
 	INNER JOIN inserted ON inserted.ID = PD.ID
