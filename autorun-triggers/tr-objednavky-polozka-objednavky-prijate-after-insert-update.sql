@@ -12,6 +12,4 @@ BEGIN
 	INNER JOIN inserted ON inserted.ID = Pol.ID
 	INNER JOIN Obchod_ObsahPolozkySArtiklem AS Obsah ON Obsah.ID = Pol.ObsahPolozky_ID
 	INNER JOIN CSW_BI_StavSkladuVCenach AS Cena ON Cena.Artikl_ID = Obsah.Artikl_ID
-
-	
 END

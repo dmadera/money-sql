@@ -4,7 +4,7 @@ GO
 GO
 :r S:\autorun-triggers\tr-artikly-artikl-after-insert-update.sql
 GO
-:r S:\autorun-triggers\tr-sklady-zasoba-after-insert-update.sql
+:r S:\autorun-triggers\tr-skladovy-doklad-dodaci-list-prijaty-after-insert-update.sql
 GO
 :r S:\autorun-triggers\tr-ceniky-polozka-ceniku-after-insert-update.sql
 GO

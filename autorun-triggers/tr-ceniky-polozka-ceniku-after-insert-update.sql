@@ -27,8 +27,6 @@ BEGIN
 
 	ALTER TABLE Artikly_Artikl ENABLE TRIGGER TR_Artikly_Artikl_AfterInsertUpdate;
 
-	ALTER TABLE Sklady_Zasoba DISABLE TRIGGER TR_Sklady_Zasoba_AfterInsertUpdate;
-
 	UPDATE Sklady_Zasoba SET
 		Marze_UserData = Cena.Marze_UserData,
 		NakupniCena_UserData = Cena.SkladovaCena_UserData
@@ -36,5 +34,4 @@ BEGIN
 	INNER JOIN Artikly_Artikl AS Artikl ON Artikl.ID = Zasoba.Artikl_ID
 	INNER JOIN inserted AS Cena ON Cena.Artikl_ID = Artikl.ID;
 
-	ALTER TABLE Sklady_Zasoba ENABLE TRIGGER TR_Sklady_Zasoba_AfterInsertUpdate;
 END;
