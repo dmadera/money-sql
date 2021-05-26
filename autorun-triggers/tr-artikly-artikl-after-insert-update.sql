@@ -7,23 +7,33 @@ BEGIN
 	DECLARE @VychoziCenik_ID AS UNIQUEIDENTIFIER;
 	SET @VychoziCenik_ID = (SELECT TOP 1 Agenda.VychoziCenik_ID FROM System_AgendaDetail AS Agenda);
 
+	DECLARE @NakupniCenik_ID AS UNIQUEIDENTIFIER;
+	SET @NakupniCenik_ID = (SELECT TOP 1 ID FROM Ceniky_Cenik AS Cenik WHERE Cenik.Kod = '_NAKUP');
+
 	DECLARE @VychoziSklad_ID AS UNIQUEIDENTIFIER;
 	SET @VychoziSklad_ID = (SELECT TOP 1 Agenda.VychoziSklad_ID FROM System_AgendaDetail AS Agenda);
 
 	DISABLE TRIGGER ALL ON Ceniky_PolozkaCeniku;
 	
 	UPDATE Ceniky_PolozkaCeniku SET 
-		SkladovaCena_UserData = StavCena.JednotkovaSkladovaCena,
-		Marze_UserData = IIF(StavCena.JednotkovaSkladovaCena = 0, 0, ROUND(100/StavCena.JednotkovaSkladovaCena*(StavCena.JednotkovaCenikovaCena-StavCena.JednotkovaSkladovaCena), 2)),
-		Cena = ROUND(Cena.Cena, 2),
+		SkladovaCena_UserData = ROUND(StavCena.JednotkovaSkladovaCena, 2),
+		Marze_UserData = ROUND(CASE
+			WHEN Cena.Cenik_ID = @NakupniCenik_ID THEN 0
+			WHEN StavCena.JednotkovaSkladovaCena = 0 THEN 0
+			ELSE 100 / StavCena.JednotkovaSkladovaCena * (StavCena.JednotkovaCenikovaCena - StavCena.JednotkovaSkladovaCena) END, 2),
+		Cena = ROUND(CASE
+			WHEN Cena.Cenik_ID = @NakupniCenik_ID THEN StavCena.JednotkovaSkladovaCena
+			WHEN StavCena.JednotkovaSkladovaCena = 0 THEN 0
+			WHEN Cena.Cena = 0 THEN StavCena.JednotkovaSkladovaCena * 1.25
+			ELSE Cena.Cena END, 2),
 		CisloDokladu_UserData = ISNULL(Pohyb.CisloDokladu, ''),
 		Sklad_ID = @VychoziSklad_ID,
-		NepodlehatSleveDokladu = IIF(Cena.Cenik_ID = @VychoziCenik_ID, 0, 1),
+		NepodlehatSleveDokladu = IIF(Cena.Cenik_ID = @VychoziCenik_ID OR Cena.Cenik_ID = @NakupniCenik_ID, 0, 1),
 		DatumZmenyZasoby_UserData = IIF(Pohyb.Datum IS NULL, '', FORMAT(Pohyb.Datum, 'yyyy.MM.dd HH:mm:ss'))
 	FROM Ceniky_PolozkaCeniku AS Cena
 	INNER JOIN inserted AS Artikl ON Artikl.ID = Cena.Artikl_ID
 	INNER JOIN Sklady_Zasoba AS Zasoba ON Zasoba.Artikl_ID = Artikl.ID
-	INNER JOIN CSW_BI_StavSkladuVCenach AS StavCena ON StavCena.Artikl_ID = Cena.Artikl_ID AND StavCena.Sklad_ID = Cena.Sklad_ID
+	INNER JOIN CSW_BI_StavSkladuVCenach AS StavCena ON StavCena.Artikl_ID = Cena.Artikl_ID AND StavCena.Sklad_ID = Cena.Sklad_ID 
 	LEFT JOIN (
 		SELECT 
 			Pohyb.Konto_ID,
