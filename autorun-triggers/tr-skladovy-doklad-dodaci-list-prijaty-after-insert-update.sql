@@ -6,6 +6,9 @@ BEGIN
 	DECLARE @VychoziCenik_ID AS UNIQUEIDENTIFIER;
 	SET @VychoziCenik_ID = (SELECT TOP 1 Agenda.VychoziCenik_ID FROM System_AgendaDetail AS Agenda);
 
+	-- po tvorbe DL Money automaticky edituje neco na artiklech
+	-- tzn. spusti se na polozky trigger artiklu
+
 	ALTER TABLE Ceniky_PolozkaCeniku DISABLE TRIGGER TR_Ceniky_PolozkaCeniku_AfterInsertUpdate;
 
 	UPDATE Ceniky_PolozkaCeniku SET 

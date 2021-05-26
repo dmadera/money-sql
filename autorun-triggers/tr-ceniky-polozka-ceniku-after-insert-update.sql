@@ -17,7 +17,7 @@ BEGIN
 	INNER JOIN inserted ON inserted.ID = Cena.ID
 	INNER JOIN CSW_BI_StavSkladuVCenach AS StavCena ON StavCena.Artikl_ID = Cena.Artikl_ID AND StavCena.Sklad_ID = Cena.Sklad_ID;
 
-	-- spusti trigger Artikly
+	-- spusti trigger artikly, ktery aktualizuje i skladove zasoby
 	UPDATE Artikly_Artikl SET
 		Deleted = Artikl.Deleted
 	FROM Artikly_Artikl AS Artikl
