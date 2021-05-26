@@ -3,7 +3,7 @@ ON Artikly_Artikl
 AFTER INSERT, UPDATE
 AS
 BEGIN
-	
+
 	UPDATE Artikly_Artikl SET	
 		NakupniCena_UserData = StavCena.JednotkovaSkladovaCena,
 		Marze_UserData = IIF(StavCena.JednotkovaSkladovaCena = 0, 0, ROUND(100/StavCena.JednotkovaSkladovaCena*(StavCena.JednotkovaCenikovaCena-StavCena.JednotkovaSkladovaCena), 2))
