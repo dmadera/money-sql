@@ -49,7 +49,8 @@ BEGIN
 		Tel1Cislo = IIF(SpojeniPreb.ID IS NULL, SpojeniTel.SpojeniCislo, SpojeniPreb.SpojeniCislo),
 		TelefonSpojeni1_ID = IIF(SpojeniPreb.ID IS NULL, SpojeniTel.ID, SpojeniPreb.ID)
 	FROM Adresar_Osoba AS Osoba
-	INNER JOIN inserted AS Firma ON Firma.ID = Osoba.Parent_ID
+	INNER JOIN Adresar_Firma AS Firma ON Firma.ID = Osoba.Parent_ID
+	INNER JOIN inserted ON inserted.ID = Firma.ID
 	LEFT JOIN (
 		SELECT Spojeni.ID, Spojeni.Parent_ID, Spojeni.Popis, Spojeni.SpojeniCislo
 		FROM Adresar_Spojeni AS Spojeni

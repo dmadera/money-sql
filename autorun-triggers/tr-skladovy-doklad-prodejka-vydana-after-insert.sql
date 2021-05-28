@@ -66,6 +66,4 @@ BEGIN
 		LEFT JOIN Ucetnictvi_InterniDoklad AS IDa ON IDa.ParovaciSymbol = PR.CisloDokladu
         LEFT JOIN Ucetnictvi_InterniDoklad AS ID ON ID.CisloDokladu = '_SK000000'
         WHERE AdrKlic.Kod != '-SEK' AND PR.SumaCelkem >= 5000 AND (Fir.VlastniSleva = 0 OR Fir.HodnotaSlevy = 0) AND IDa.ID IS NULL
-
-	
 END
