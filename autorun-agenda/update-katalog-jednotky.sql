@@ -2,41 +2,37 @@
 SET Context_Info 0x55554;
 
 -- jednotky 
--- nastavi prodejni jednotku prvni pod hlavni, pokud je kartonova
+-- nastavi prodejni jednotku prvni pod hlavni, pokud je kartonova (Ciselniky_Jednotka.KartonovaJednotka_UserData = 1)
 -- nastavi nakupni jednotku prvni pod hlavni
 UPDATE Artikly_Artikl SET
-	Artikly_Artikl.ProdejniJednotka_ID = ISNULL(SQ.ProdejniJednotka_ID, Artikly_ArtiklJednotka.ID),
-	Artikly_Artikl.NakupniJednotka_ID = ISNULL(SQ.NakupniJednotka_ID, Artikly_ArtiklJednotka.ID)
-FROM (
+	ProdejniJednotka_ID = ISNULL(ArtJedPrvniKarton.ID, Artikl.HlavniJednotka_ID),
+	NakupniJednotka_ID = ISNULL(ArtJedPrvni.ID, Artikl.HlavniJednotka_ID)
+FROM Artikly_Artikl AS Artikl
+LEFT JOIN (
+	-- vybere jednotku 2. v poradi pod hlavni a zaroven KartonovaJednotka_UserData = 1
 	SELECT
-		Artikly_Artikl.ID AS ID,
-		MinMnozstviT.Parent_ID AS ProdejniJednotka_ID,
-		MinMnozstviT1.Parent_ID AS NakupniJednotka_ID
-	FROM Artikly_Artikl
-	LEFT JOIN (
-		SELECT 
-			Artikly_ArtiklJednotka.Parent_ID as Parent_ID, MIN(VychoziMnozstvi) as VychoziMnozstvi
-		FROM  Artikly_ArtiklJednotka
-		INNER JOIN Ciselniky_Jednotka AS Jednotka ON Jednotka.ID = Artikly_ArtiklJednotka.Jednotka_ID
-		WHERE Artikly_ArtiklJednotka.ParentJednotka_ID IS NOT NULL AND Jednotka.KartonovaJednotka_UserData = 1
-		GROUP BY Artikly_ArtiklJednotka.Parent_ID
-	) MinMnozstviT ON Artikly_Artikl.ID = MinMnozstviT.Parent_ID
-	LEFT JOIN (
-		SELECT 
-			Artikly_ArtiklJednotka.Parent_ID as Parent_ID, MIN(VychoziMnozstvi) as VychoziMnozstvi
-		FROM  Artikly_ArtiklJednotka
-		WHERE Artikly_ArtiklJednotka.ParentJednotka_ID IS NOT NULL
-		GROUP BY Artikly_ArtiklJednotka.Parent_ID
-	) MinMnozstviT1 ON Artikly_Artikl.ID = MinMnozstviT1.Parent_ID
-	INNER JOIN Artikly_ArtiklJednotka ON 
-		Artikly_ArtiklJednotka.Parent_ID = Artikly_Artikl.ID AND 
-		MinMnozstviT.VychoziMnozstvi = Artikly_ArtiklJednotka.VychoziMnozstvi
-) AS SQ
-RIGHT JOIN Artikly_ArtiklJednotka ON Artikly_ArtiklJednotka.Parent_ID = SQ.ID
-INNER JOIN Artikly_Artikl ON Artikly_ArtiklJednotka.Parent_ID = Artikly_Artikl.ID
-WHERE 
-	Artikly_ArtiklJednotka.ParentJednotka_ID IS NULL AND
-	Artikly_ArtiklJednotka.Deleted = 0;
+		ArtJed.Parent_ID, MIN(ArtJed.VychoziMnozstvi) AS VychoziMnozstvi
+	FROM Artikly_ArtiklJednotka AS ArtJed 
+	LEFT JOIN Ciselniky_Jednotka AS Jednotka ON Jednotka.ID = ArtJed.Jednotka_ID
+	WHERE ArtJed.ParentJednotka_ID IS NOT NULL AND Jednotka.KartonovaJednotka_UserData = 1
+	GROUP BY ArtJed.Parent_ID
+) AS ArtJedPrvniKartonSub ON ArtJedPrvniKartonSub.Parent_ID = Artikl.ID
+LEFT JOIN Artikly_ArtiklJednotka AS ArtJedPrvniKarton ON 
+	ArtJedPrvniKarton.Parent_ID = ArtJedPrvniKartonSub.Parent_ID 
+	AND ArtJedPrvniKarton.VychoziMnozstvi = ArtJedPrvniKartonSub.VychoziMnozstvi
+LEFT JOIN (
+	-- vybere jednotku 2. v poradi pod hlavni
+	SELECT
+		ArtJed.Parent_ID, MIN(ArtJed.VychoziMnozstvi) AS VychoziMnozstvi
+	FROM Artikly_ArtiklJednotka AS ArtJed 
+	LEFT JOIN Ciselniky_Jednotka AS Jednotka ON Jednotka.ID = ArtJed.Jednotka_ID
+	WHERE ArtJed.ParentJednotka_ID IS NOT NULL
+	GROUP BY ArtJed.Parent_ID
+) AS ArtJedPrvniSub ON ArtJedPrvniSub.Parent_ID = Artikl.ID
+LEFT JOIN Artikly_ArtiklJednotka AS ArtJedPrvni ON 
+	ArtJedPrvni.Parent_ID = ArtJedPrvniSub.Parent_ID 
+	AND ArtJedPrvni.VychoziMnozstvi = ArtJedPrvniSub.VychoziMnozstvi
+WHERE Artikl.Deleted = 0
 
 -- jednotky - u dodavatele nastavi prodejni jednotku
 UPDATE Artikly_ArtiklDodavatel SET

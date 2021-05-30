@@ -1,13 +1,25 @@
 CREATE OR ALTER TRIGGER TR_SkladovyDoklad_ProdejkaVydana_AfterInsertUpdate
 ON SkladovyDoklad_ProdejkaVydana
-AFTER INSERT, UPDATE
+AFTER INSERT
 AS
 BEGIN
+	
+	SET Context_info 0x55553;
+	
+	UPDATE SkladovyDoklad_ProdejkaVydana SET
+		Zaplaceno_UserData = CASE
+			WHEN Platba.Kod = 'ZH' THEN 1
+			WHEN Platba.Kod = 'ZK' THEN 1
+			ELSE 0
+		END
+	FROM SkladovyDoklad_ProdejkaVydana AS Prodejka
+	INNER JOIN inserted ON inserted.ID = Prodejka.ID
+	INNER JOIN Ciselniky_ZpusobPlatby AS Platba ON Platba.ID = Prodejka.ZpusobPlatby_ID;
 
 	UPDATE Ucetnictvi_InterniDoklad SET
 		ID = ID.ID
 	FROM Ucetnictvi_InterniDoklad AS ID
-	INNER JOIN inserted ON inserted.CisloDokladu = ID.ParovaciSymbol
+	INNER JOIN inserted ON inserted.CisloDokladu = ID.ParovaciSymbol;
 
 	INSERT INTO Ucetnictvi_InterniDoklad (
             Parent_ID, Root_ID, Group_ID, Locked, Cinnost_ID, 
@@ -65,5 +77,6 @@ BEGIN
 		INNER JOIN Adresar_AdresniKlic AS AdrKlic ON AdrKlic.ID = FirAdrKl.AdresniKlic_ID
 		LEFT JOIN Ucetnictvi_InterniDoklad AS IDa ON IDa.ParovaciSymbol = PR.CisloDokladu
         LEFT JOIN Ucetnictvi_InterniDoklad AS ID ON ID.CisloDokladu = '_SK000000'
-        WHERE AdrKlic.Kod != '-SEK' AND PR.SumaCelkem >= 5000 AND (Fir.VlastniSleva = 0 OR Fir.HodnotaSlevy = 0) AND IDa.ID IS NULL
+        WHERE AdrKlic.Kod != '-SEK' AND PR.SumaCelkem >= 5000 AND (Fir.VlastniSleva = 0 OR Fir.HodnotaSlevy = 0) AND IDa.ID IS NULL;
+
 END
