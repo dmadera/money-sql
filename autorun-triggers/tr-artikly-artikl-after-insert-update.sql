@@ -18,47 +18,19 @@ BEGIN
 
 	-- produktove klice - spoji jako retezec do UserData pole
 	UPDATE Artikly_Artikl SET 
-		Artikly_Artikl.Priznaky_UserData=SQ.Priznaky_UserData
-	FROM (
-		SELECT
-			inserted.ID as ID,
-			STRING_AGG(CONVERT(NVARCHAR(max), ISNULL(Artikly_ProduktovyKlic.Kod, '')), ' ') WITHIN GROUP (ORDER BY Artikly_ProduktovyKlic.Kod ASC) AS Priznaky_UserData
-		FROM inserted
-		RIGHT JOIN Artikly_ArtiklProduktovyKlic ON Artikly_ArtiklProduktovyKlic.Parent_ID=inserted.ID
-		INNER JOIN Artikly_ProduktovyKlic ON Artikly_ProduktovyKlic.ID = Artikly_ArtiklProduktovyKlic.ProduktovyKlic_ID
-		WHERE LEN(Artikly_ProduktovyKlic.Kod) = 1
-		GROUP BY inserted.ID
-	) AS SQ
-	WHERE Artikly_Artikl.ID = SQ.ID;
-
-	UPDATE Artikly_Artikl SET
-		BaleniMnozstvi_UserData = Bal.Mnozstvi,
-		BaleniJednotky_UserData = Bal.Jednotky
+		Priznaky_UserData = ISNULL(ArtPriz.Priznaky, ''),
+		BaleniJednotky_UserData = ISNULL(ArtBal.Jednotky, ''),
+		BaleniMnozstvi_UserData = ISNULL(ArtBal.Mnozstvi, ''),
+		KategorieRetezec_UserData = ISNULL(ArtKat.KategorieRetezec, ''),
+		Kategorie = ISNULL(ArtKat.Kategorie, '')
 	FROM Artikly_Artikl AS Art
-	INNER JOIN (
-		SELECT 
-			ArtJed.Parent_ID as Parent_ID, 
-			STRING_AGG(FORMAT(ArtJed.VychoziMnozstvi, '#' ), '/') WITHIN GROUP (ORDER BY VychoziMnozstvi DESC) AS Mnozstvi,
-			STRING_AGG(ArtJed.Kod, '/') WITHIN GROUP (ORDER BY VychoziMnozstvi DESC)  AS Jednotky
-		FROM (
-			SELECT AJ.VychoziMnozstvi, AJ.Kod, AJ.Parent_ID, AJ.Jednotka_ID, ParentJednotka_ID
-			FROM Artikly_ArtiklJednotka AS AJ
-			INNER JOIN inserted ON inserted.ID = AJ.Parent_ID 
-		) AS ArtJed
-		INNER JOIN Ciselniky_Jednotka AS Jed ON Jed.ID = ArtJed.Jednotka_ID
-		WHERE ArtJed.ParentJednotka_ID IS NOT NULL AND Jed.KartonovaJednotka_UserData = 1
-		GROUP BY ArtJed.Parent_ID
-	) Bal ON Art.ID = Bal.Parent_ID;
+	INNER JOIN inserted ON inserted.ID = Art.ID
+	LEFT JOIN UserArtiklyBaleni AS ArtBal ON ArtBal.Artikl_ID = Art.ID
+	LEFT JOIN UserArtiklyPriznaky AS ArtPriz ON ArtPriz.Artikl_ID = Art.ID
+	LEFT JOIN UserArtiklyKategorie AS ArtKat ON ArtKat.Artikl_ID = Art.ID;
+
 	
-	-- jednotky - nastavi u vedlejsich jednotek aktualizovanych artiklu nedelitelne mnozstvi na 0
-	-- nastavi sazbu DPH
-	UPDATE Artikly_ArtiklJednotka SET
-		Artikly_ArtiklJednotka.NedelitelneMnozstvi = 0.0
-	FROM Artikly_ArtiklJednotka AS Jednotka
-	INNER JOIN inserted ON inserted.ID = Jednotka.Parent_ID
-	WHERE ParentJednotka_ID IS NOT NULL;
-	
-	UPDATE Artikly_Artikl SET
+	/*UPDATE Artikly_Artikl SET
 		SazbaDPH_UserData = CONCAT(STR(Sazba.Sazba, 2, 0), '%')
 	FROM Artikly_Artikl AS Art
 	INNER JOIN inserted ON inserted.ID = Art.ID
@@ -70,90 +42,27 @@ BEGIN
 		GROUP BY ArtSazba.Parent_ID
 	) AS ArtSazbaSub ON ArtSazbaSub.Parent_ID = Art.ID
 	INNER JOIN Artikly_ArtiklDPH AS ArtSazba ON ArtSazba.Parent_ID = ArtSazbaSub.Parent_ID AND ArtSazba.Zacatek = ArtSazbaSub.Zacatek
-	INNER JOIN EconomicBase_SazbaDPH AS Sazba ON Sazba.DruhSazby = ArtSazba.SazbaVystup AND Sazba.PlatnostDo >= GETDATE();
+	INNER JOIN EconomicBase_SazbaDPH AS Sazba ON Sazba.DruhSazby = ArtSazba.SazbaVystup AND Sazba.PlatnostDo >= GETDATE();*/
 	
-	-- kategorie - naplnit uzivatelsky sloupec kategorii
-	WITH Tree (ID, Nazev, ParentObject_ID, Level, KompletniCesta, ListID) AS (
-		-- anchor:
-		SELECT 
-			ID, Nazev, ParentObject_ID, 0, CAST(Nazev AS varchar(max)), CAST(ID AS varchar(max))
-		FROM Artikly_KategorieArtiklu WHERE ParentObject_ID IS NULL
-		UNION ALL
-		-- recursive:
-		SELECT 
-			t.ID, t.Nazev, t.ParentObject_ID, Tree.Level + 1, 
-			CAST(CONCAT(Tree.KompletniCesta, ' > ', t.Nazev) AS VARCHAR(max)),
-			CAST(CONCAT(Tree.ListID, '|', t.ID) AS VARCHAR(max))
-		FROM Tree 
-		INNER JOIN Artikly_KategorieArtiklu AS t ON t.ParentObject_ID = Tree.ID
-	)
-	UPDATE Artikly_Artikl SET
-		KategorieRetezec_UserData = SQ.Kategorie_UserData,
-		Kategorie = SQ.Kategorie
-	FROM Artikly_Artikl AS Art
-	INNER JOIN inserted ON inserted.ID = Art.ID
-	RIGHT JOIN (
-		SELECT 
-			Art.ID AS ID,
-			STRING_AGG(Kat.KompletniCesta, ' @ ') AS Kategorie_UserData,
-			LOWER(STRING_AGG(Kat.ListID, '|')) AS Kategorie
-		FROM Artikly_Artikl AS Art
-		CROSS APPLY STRING_SPLIT(Art.Kategorie, '|') AS ArtKat
-		INNER JOIN (
-			SELECT 
-				ID, KompletniCesta, ListID 
-			FROM Tree
-			WHERE ParentObject_ID IS NOT NULL
-		) AS Kat ON CAST(Kat.ID AS varchar(100)) = ArtKat.value
-		GROUP BY Art.ID
-	) AS SQ ON SQ.ID = Art.ID
-	OPTION (MAXRECURSION 3);
 
 	SET Context_Info 0x55555;
 
 	UPDATE Ceniky_PolozkaCeniku SET 
-		SkladovaCena_UserData = ROUND(StavCena.JednotkovaSkladovaCena, 2),
-		Marze_UserData = ROUND(CASE
-			WHEN Cena.Cenik_ID = @NakupniCenik_ID THEN 0
-			WHEN StavCena.JednotkovaSkladovaCena = 0 THEN 0
-			ELSE 100 / StavCena.JednotkovaSkladovaCena * (StavCena.JednotkovaCenikovaCena - StavCena.JednotkovaSkladovaCena) END, 2),
-		Cena = ROUND(CASE
-			WHEN Cena.Cenik_ID = @NakupniCenik_ID THEN StavCena.JednotkovaSkladovaCena
-			WHEN StavCena.JednotkovaSkladovaCena = 0 THEN 0
-			WHEN Cena.Cena = 0 THEN StavCena.JednotkovaSkladovaCena * 1.25
-			ELSE Cena.Cena END, 2),
-		BudouciCena = ROUND(CASE
-			WHEN Cena.Cenik_ID = @NakupniCenik_ID THEN 0
-			WHEN StavCena.JednotkovaSkladovaCena = 0 THEN 0
-			WHEN Cena.Cena = 0 THEN 0
-			WHEN Cena.BudouciCena > 0 THEN StavCena.JednotkovaSkladovaCena * 1.25 
-			WHEN StavCena.JednotkovaSkladovaCena / 100 < ABS(StavCena.JednotkovaSkladovaCena - Cena.SkladovaCena_UserData) THEN StavCena.JednotkovaSkladovaCena * 1.25 
-			ELSE 0 END, 2),
-		CisloDokladu_UserData = ISNULL(Pohyb.CisloDokladu, ''),
-		Sklad_ID = @VychoziSklad_ID,
+		SkladovaCena_UserData = PolCen.SkladovaCena,
+		Marze_UserData = PolCen.Marze,
+		Cena = PolCen.Cena,
+		BudouciCena = IIF(PolCen.Marze <> Cena.Marze_UserData, PolCen.BudouciCena, 0),
+		Cena25_UserData = PolCen.Cena25,
+		CisloDokladu_UserData = ISNULL(PoslPrijem.CisloDokladu, ''),
+		DatumZmenyZasoby_UserData = IIF(PoslPrijem.Datum IS NULL, '', FORMAT(PoslPrijem.Datum, 'yyyy.MM.dd HH:mm:ss')),
 		VypocetVyseZmeny = 0,
-		NepodlehatSleveDokladu = IIF(Cena.Cenik_ID = @VychoziCenik_ID OR Cena.Cenik_ID = @NakupniCenik_ID, 0, 1),
-		DatumZmenyZasoby_UserData = IIF(Pohyb.Datum IS NULL, '', FORMAT(Pohyb.Datum, 'yyyy.MM.dd HH:mm:ss')),
-		Priznaky_UserData = ArtiklP.Priznaky_UserData,
-		DruhPolozkyKatalogu_UserData = Druh.Nazev
+		NepodlehatSleveDokladu = PolCen.NepodlehaSleveDokladu,
+		Priznaky_UserData = PolCen.Priznaky,
+		DruhPolozkyKatalogu_UserData = PolCen.DruhArtikluNazev
 	FROM Ceniky_PolozkaCeniku AS Cena
-	INNER JOIN inserted AS Artikl ON Artikl.ID = Cena.Artikl_ID
-	INNER JOIN Artikly_Artikl AS ArtiklP ON ArtiklP.ID = Artikl.ID
-	INNER JOIN Sklady_Zasoba AS Zasoba ON Zasoba.Artikl_ID = Artikl.ID
-	INNER JOIN Ciselniky_DruhArtiklu AS Druh ON Druh.ID = Artikl.DruhArtiklu_ID
-	INNER JOIN CSW_BI_StavSkladuVCenach AS StavCena ON StavCena.Artikl_ID = Cena.Artikl_ID AND StavCena.Sklad_ID = Cena.Sklad_ID
-	LEFT JOIN (
-		SELECT 
-			Pohyb.Konto_ID,
-			ISNULL(MAX(Pohyb.Modify_Date), MAX(Pohyb.Create_Date)) AS Datum
-		FROM S5_Sklady_PohybZasobyPrehled AS Pohyb
-		WHERE Pohyb.DruhPohybu = 0
-		GROUP BY Pohyb.Konto_ID
-	) AS SubPohyb ON SubPohyb.Konto_ID = Zasoba.ID
-	LEFT JOIN (
-		SELECT Konto_ID, CisloDokladu, ISNULL(Modify_Date, Create_Date) AS Datum
-		FROM S5_Sklady_PohybZasobyPrehled
-	) AS Pohyb ON Pohyb.Konto_ID = SubPohyb.Konto_ID AND Pohyb.Datum = SubPohyb.Datum;
+	INNER JOIN inserted ON inserted.ID = Cena.Artikl_ID
+	INNER JOIN UserPolozkyCeniku AS PolCen ON PolCen.ID = Cena.ID
+	LEFT JOIN UserPosledniPrijemZasoby AS PoslPrijem ON PoslPrijem.Zasoba_ID = PolCen.Zasoba_ID;
 
 	UPDATE Artikly_Artikl SET	
 		NakupniCena_UserData = Cena.SkladovaCena_UserData,

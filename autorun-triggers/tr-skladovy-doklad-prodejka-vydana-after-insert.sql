@@ -1,21 +1,9 @@
-CREATE OR ALTER TRIGGER TR_SkladovyDoklad_ProdejkaVydana_AfterInsertUpdate
+CREATE OR ALTER TRIGGER TR_SkladovyDoklad_ProdejkaVydana_AfterInsert
 ON SkladovyDoklad_ProdejkaVydana
 AFTER INSERT
 AS
 BEGIN
 	
-	SET Context_info 0x55553;
-	
-	UPDATE SkladovyDoklad_ProdejkaVydana SET
-		Zaplaceno_UserData = CASE
-			WHEN Platba.Kod = 'ZH' THEN 1
-			WHEN Platba.Kod = 'ZK' THEN 1
-			ELSE 0
-		END
-	FROM SkladovyDoklad_ProdejkaVydana AS Prodejka
-	INNER JOIN inserted ON inserted.ID = Prodejka.ID
-	INNER JOIN Ciselniky_ZpusobPlatby AS Platba ON Platba.ID = Prodejka.ZpusobPlatby_ID;
-
 	UPDATE Ucetnictvi_InterniDoklad SET
 		ID = ID.ID
 	FROM Ucetnictvi_InterniDoklad AS ID
