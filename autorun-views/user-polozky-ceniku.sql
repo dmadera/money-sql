@@ -1,7 +1,7 @@
-IF OBJECT_ID('dbo.UserPolozkyCeniku', 'V') IS NOT NULL DROP VIEW dbo.UserPolozkyCeniku;
+IF OBJECT_ID('dbo.USER_PolozkyCeniku', 'V') IS NOT NULL DROP VIEW dbo.USER_PolozkyCeniku;
 GO
 
-CREATE VIEW dbo.UserPolozkyCeniku AS
+CREATE VIEW dbo.USER_PolozkyCeniku AS
 SELECT
 	Cena.ID AS ID,
 	Artikl.ID AS Artikl_ID, 

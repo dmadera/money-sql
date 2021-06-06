@@ -1,7 +1,7 @@
-IF OBJECT_ID('dbo.UserArtiklyPriznaky', 'V') IS NOT NULL DROP VIEW dbo.UserArtiklyPriznaky;
+IF OBJECT_ID('dbo.USER_ArtiklyPriznaky', 'V') IS NOT NULL DROP VIEW dbo.USER_ArtiklyPriznaky;
 GO
 
-CREATE VIEW dbo.UserArtiklyPriznaky AS
+CREATE VIEW dbo.USER_ArtiklyPriznaky AS
 SELECT
 	Art.ID AS Artikl_ID,
 	STRING_AGG(CONVERT(NVARCHAR(max), ISNULL(Pk.Kod, '')), ' ')	WITHIN GROUP (ORDER BY Pk.Kod ASC) AS Priznaky

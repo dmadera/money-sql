@@ -1,7 +1,7 @@
-IF OBJECT_ID('dbo.UserArtiklyKategorie', 'V') IS NOT NULL DROP VIEW dbo.UserArtiklyKategorie;
+IF OBJECT_ID('dbo.USER_ArtiklyKategorie', 'V') IS NOT NULL DROP VIEW dbo.USER_ArtiklyKategorie;
 GO
 
-CREATE VIEW dbo.UserArtiklyKategorie AS
+CREATE VIEW dbo.USER_ArtiklyKategorie AS
 	WITH Tree (ID, Nazev, ParentObject_ID, Level, KompletniCesta, ListID) AS (
 		-- anchor:
 		SELECT 

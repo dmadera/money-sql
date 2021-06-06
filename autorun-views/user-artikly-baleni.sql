@@ -1,7 +1,7 @@
-IF OBJECT_ID('dbo.UserArtiklyBaleni', 'V') IS NOT NULL DROP VIEW dbo.UserArtiklyBaleni;
+IF OBJECT_ID('dbo.USER_ArtiklyBaleni', 'V') IS NOT NULL DROP VIEW dbo.USER_ArtiklyBaleni;
 GO
 
-CREATE VIEW dbo.UserArtiklyBaleni AS
+CREATE VIEW dbo.USER_ArtiklyBaleni AS
 SELECT 
 	ArtJed.Parent_ID as Artikl_ID, 
 	STRING_AGG(FORMAT(ArtJed.VychoziMnozstvi, '#' ), '/') WITHIN GROUP (ORDER BY VychoziMnozstvi DESC) AS Mnozstvi,

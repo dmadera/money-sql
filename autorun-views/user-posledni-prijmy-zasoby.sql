@@ -1,7 +1,7 @@
-IF OBJECT_ID('dbo.UserPosledniPrijemZasoby', 'V') IS NOT NULL DROP VIEW dbo.UserPosledniPrijemZasoby;
+IF OBJECT_ID('dbo.USER_PosledniPrijemZasoby', 'V') IS NOT NULL DROP VIEW dbo.USER_PosledniPrijemZasoby;
 GO
 
-CREATE VIEW dbo.UserPosledniPrijemZasoby AS
+CREATE VIEW dbo.USER_PosledniPrijemZasoby AS
 SELECT 
 	Pohyb.Konto_ID AS Zasoba_ID,
 	Pohyb.Datum AS Datum,

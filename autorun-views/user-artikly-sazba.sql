@@ -1,7 +1,7 @@
-IF OBJECT_ID('dbo.UserArtiklySazba', 'V') IS NOT NULL DROP VIEW dbo.UserArtiklySazba;
+IF OBJECT_ID('dbo.USER_ArtiklySazba', 'V') IS NOT NULL DROP VIEW dbo.USER_ArtiklySazba;
 GO
 
-CREATE VIEW dbo.UserArtiklySazba AS
+CREATE VIEW dbo.USER_ArtiklySazba AS
 SELECT
 	Art.ID AS Artikl_ID,
 	CONCAT(STR(Sazba.Sazba, 2, 0), '%') AS Sazba

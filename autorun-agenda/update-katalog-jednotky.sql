@@ -21,9 +21,9 @@ LEFT JOIN Artikly_ArtiklJednotka AS ArtJedPrvniKarton ON
 	ArtJedPrvniKarton.Parent_ID = ArtJedPrvniKartonSub.Parent_ID 
 	AND ArtJedPrvniKarton.VychoziMnozstvi = ArtJedPrvniKartonSub.VychoziMnozstvi
 LEFT JOIN (
-	-- vybere jednotku 2. v poradi pod hlavni
+	-- vybere jednotku poslední jednotku v poradi pod hlavni
 	SELECT
-		ArtJed.Parent_ID, MIN(ArtJed.VychoziMnozstvi) AS VychoziMnozstvi
+		ArtJed.Parent_ID, MAX(ArtJed.VychoziMnozstvi) AS VychoziMnozstvi
 	FROM Artikly_ArtiklJednotka AS ArtJed 
 	LEFT JOIN Ciselniky_Jednotka AS Jednotka ON Jednotka.ID = ArtJed.Jednotka_ID
 	WHERE ArtJed.ParentJednotka_ID IS NOT NULL
