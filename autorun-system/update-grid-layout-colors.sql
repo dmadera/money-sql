@@ -17,7 +17,7 @@ IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
 		WHERE Obj.ObjectName = 'Zasoba';
 
 UPDATE MetaData_GridColors SET
-	Condition = '([Objednano] > 0)',
+	Condition = '([StavZobrazeniRadku_UserData] = 2)',
 	Priority = 10,
 	BackColor = -1, 
 	FontColor = @Blue, 
@@ -33,10 +33,10 @@ IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
 		WHERE Obj.ObjectName = 'Zasoba';
 
 UPDATE MetaData_GridColors SET
-	Condition = '([ProdejMinMED_UserData] > [ZustatekMnozstvi] + [Objednano])',
+	Condition = '([StavZobrazeniRadku_UserData] = 1)',
 	Priority = 100,
 	BackColor = -1, 
-	FontColor = @Red, 
+	FontColor = @Bordo, 
 	FontStyle = 0
 WHERE Name = @Name;
 
@@ -55,22 +55,6 @@ UPDATE MetaData_GridColors SET
 	FontColor = @Bordo, 
 	FontStyle = 0
 WHERE Name = @Name;	
-
-SET @Name = 'Marze pod 10';
-IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
-	INSERT INTO MetaData_GridColors 
-		(Object_ID, Name, IsUser, IsGenerated)
-		SELECT TOP 1 Obj.ID, @Name, 1, 0
-		FROM MetaData_Objects AS Obj
-		WHERE Obj.ObjectName = 'PolozkaCeniku';
-
-UPDATE MetaData_GridColors SET
-	Condition = '([Marze_UserData] < 10)',
-	Priority = 100,
-	BackColor = -1, 
-	FontColor = @Red, 
-	FontStyle = 0
-	WHERE Name = @Name;
 
 SET @Name = 'Zvyseni marze';
 IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)

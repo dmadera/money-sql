@@ -25,25 +25,9 @@ BEGIN
 		Kategorie = ISNULL(ArtKat.Kategorie, '')
 	FROM Artikly_Artikl AS Art
 	INNER JOIN inserted ON inserted.ID = Art.ID
-	LEFT JOIN UserArtiklyBaleni AS ArtBal ON ArtBal.Artikl_ID = Art.ID
-	LEFT JOIN UserArtiklyPriznaky AS ArtPriz ON ArtPriz.Artikl_ID = Art.ID
-	LEFT JOIN UserArtiklyKategorie AS ArtKat ON ArtKat.Artikl_ID = Art.ID;
-
-	
-	/*UPDATE Artikly_Artikl SET
-		SazbaDPH_UserData = CONCAT(STR(Sazba.Sazba, 2, 0), '%')
-	FROM Artikly_Artikl AS Art
-	INNER JOIN inserted ON inserted.ID = Art.ID
-	INNER JOIN (
-		SELECT ArtSazba.Parent_ID AS Parent_ID, MAX(ArtSazba.Zacatek) AS Zacatek
-		FROM Artikly_ArtiklDPH AS ArtSazba
-		INNER JOIN EconomicBase_SazbaDPH AS Sazba ON Sazba.DruhSazby = ArtSazba.SazbaVystup AND Sazba.PlatnostDo >= GETDATE()
-		WHERE ArtSazba.Zacatek <= GETDATE()
-		GROUP BY ArtSazba.Parent_ID
-	) AS ArtSazbaSub ON ArtSazbaSub.Parent_ID = Art.ID
-	INNER JOIN Artikly_ArtiklDPH AS ArtSazba ON ArtSazba.Parent_ID = ArtSazbaSub.Parent_ID AND ArtSazba.Zacatek = ArtSazbaSub.Zacatek
-	INNER JOIN EconomicBase_SazbaDPH AS Sazba ON Sazba.DruhSazby = ArtSazba.SazbaVystup AND Sazba.PlatnostDo >= GETDATE();*/
-	
+	LEFT JOIN USER_ArtiklyBaleni AS ArtBal ON ArtBal.Artikl_ID = Art.ID
+	LEFT JOIN USER_ArtiklyPriznaky AS ArtPriz ON ArtPriz.Artikl_ID = Art.ID
+	LEFT JOIN USER_ArtiklyKategorie AS ArtKat ON ArtKat.Artikl_ID = Art.ID;
 
 	SET Context_Info 0x55555;
 
@@ -55,14 +39,18 @@ BEGIN
 		Cena25_UserData = PolCen.Cena25,
 		CisloDokladu_UserData = ISNULL(PoslPrijem.CisloDokladu, ''),
 		DatumZmenyZasoby_UserData = IIF(PoslPrijem.Datum IS NULL, '', FORMAT(PoslPrijem.Datum, 'yyyy.MM.dd HH:mm:ss')),
+		PosledniNaskladneni_UserData = ISNULL(PoslPrijem.Datum, CAST('1753-01-01 00:00:00' AS DATETIME)),
 		VypocetVyseZmeny = 0,
 		NepodlehatSleveDokladu = PolCen.NepodlehaSleveDokladu,
-		Priznaky_UserData = PolCen.Priznaky,
-		DruhPolozkyKatalogu_UserData = PolCen.DruhArtikluNazev
+		Priznaky_UserData = Artikl.Priznaky_UserData,
+		DruhPolozkyKatalogu_UserData = Druh.Nazev
 	FROM Ceniky_PolozkaCeniku AS Cena
 	INNER JOIN inserted ON inserted.ID = Cena.Artikl_ID
-	INNER JOIN UserPolozkyCeniku AS PolCen ON PolCen.ID = Cena.ID
-	LEFT JOIN UserPosledniPrijemZasoby AS PoslPrijem ON PoslPrijem.Zasoba_ID = PolCen.Zasoba_ID;
+	INNER JOIN Artikly_Artikl AS Artikl ON Artikl.ID = Cena.Artikl_ID
+	INNER JOIN Ciselniky_DruhArtiklu AS Druh ON Druh.ID = Artikl.DruhArtiklu_ID
+	INNER JOIN USER_PolozkyCeniku AS PolCen ON PolCen.ID = Cena.ID
+	LEFT JOIN USER_PosledniPrijemZasoby AS PoslPrijem ON PoslPrijem.Zasoba_ID = PolCen.Zasoba_ID;
+
 
 	UPDATE Artikly_Artikl SET	
 		NakupniCena_UserData = Cena.SkladovaCena_UserData,

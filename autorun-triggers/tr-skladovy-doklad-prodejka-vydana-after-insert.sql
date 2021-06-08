@@ -50,7 +50,7 @@ BEGIN
             0, 0, PR.CisloDokladu, PR.Create_ID, GETDATE(), PR.Modify_ID, GETDATE(), PR.Vystavil, 
 			'Šek vydaný', '',
 			(SELECT ID FROM Ciselniky_CiselnaRada AS CisRada WHERE CisRada.Kod = '_SEKY'),
-            PR.DatumVystaveni, PR.DatumVystaveni, PR.DatumVystaveni, null,
+            GETDATE(),  GETDATE(),  GETDATE(), null,
 			ROUND(CASE 
 				WHEN PR.SumaCelkem >= 10000 THEN PR.SumaCelkem / 100 * 1.5
 				WHEN PR.SumaCelkem >= 5000 THEN PR.SumaCelkem / 100 * 1
@@ -60,11 +60,17 @@ BEGIN
 			PR.AdresaKontaktniOsobaJmeno, PR.AdresaKontaktniOsobaNazev, PR.AdresaKontaktniOsobaPrijmeni, 
 			PR.Osoba_ID, PR.Firma_ID, PR.IC, PR.Jmeno, PR.DIC
         FROM inserted as PR
+		INNER JOIN System_Groups AS Grp ON Grp.ID = PR.Group_ID
         INNER JOIN Adresar_Firma AS Fir ON Fir.ID = PR.Firma_ID
 		INNER JOIN Adresar_FirmaAdresniKlic AS FirAdrKl ON FirAdrKl.Parent_ID = PR.Firma_ID
 		INNER JOIN Adresar_AdresniKlic AS AdrKlic ON AdrKlic.ID = FirAdrKl.AdresniKlic_ID
 		LEFT JOIN Ucetnictvi_InterniDoklad AS IDa ON IDa.ParovaciSymbol = PR.CisloDokladu
         LEFT JOIN Ucetnictvi_InterniDoklad AS ID ON ID.CisloDokladu = '_SK000000'
-        WHERE AdrKlic.Kod != '-SEK' AND PR.SumaCelkem >= 5000 AND (Fir.VlastniSleva = 0 OR Fir.HodnotaSlevy = 0) AND IDa.ID IS NULL;
+        WHERE 
+			Grp.Kod = 'PRODEJKY'
+			AND AdrKlic.Kod != '-SEK'
+			AND PR.SumaCelkem >= 5000 
+			AND (Fir.VlastniSleva = 0 OR Fir.HodnotaSlevy = 0) 
+			AND IDa.ID IS NULL ;
 
 END

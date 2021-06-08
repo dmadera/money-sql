@@ -37,7 +37,8 @@ WHERE Artikl.Deleted = 0
 -- jednotky - u dodavatele nastavi prodejni jednotku
 UPDATE Artikly_ArtiklDodavatel SET
 	Jednotka_ID = ArtJed.Jednotka_ID,
-	ArtiklJednotka_ID = ArtJed.ID
+	ArtiklJednotka_ID = ArtJed.ID,
+	PovinnyNasobek = 0
 FROM Artikly_ArtiklDodavatel AS ArtDod
 INNER JOIN Artikly_Artikl AS Artikl ON Artikl.ID = ArtDod.Parent_ID
 INNER JOIN Artikly_ArtiklJednotka AS ArtJed ON ArtJed.ID = Artikl.NakupniJednotka_ID;
