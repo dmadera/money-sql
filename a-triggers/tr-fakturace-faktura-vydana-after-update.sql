@@ -1,5 +1,5 @@
-CREATE OR ALTER TRIGGER TR_SkladovyDoklad_ProdejkaVydana_AfterUpdate
-ON SkladovyDoklad_ProdejkaVydana
+CREATE OR ALTER TRIGGER USER_Fakturace_FakturaVydana_AfterUpdate
+ON Fakturace_FakturaVydana
 AFTER UPDATE
 AS
 BEGIN
@@ -8,6 +8,6 @@ BEGIN
 	UPDATE Ucetnictvi_InterniDoklad SET 
 		ID = PD.ID
 	FROM Ucetnictvi_InterniDoklad AS PD
-	INNER JOIN inserted AS PR ON PD.ParovaciSymbol = PR.CisloDokladu;
+	INNER JOIN inserted AS D ON PD.ParovaciSymbol = D.CisloDokladu;
 
 END

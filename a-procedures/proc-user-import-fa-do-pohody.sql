@@ -1,13 +1,8 @@
-USE S4_System
-GO
-
--- MONEY DB: S4_Agenda_PEMA
--- Pohoda DB: StwPh_46713301_202001
-
--- importuje faktury prijate z Money do Pohody
-CREATE OR ALTER PROCEDURE User_ImportFakturDoPohody (
+CREATE OR ALTER PROCEDURE USER_ImportFakturDoPohody (
 	@Pocet int OUTPUT
 ) AS BEGIN
+-- Pohoda DB: StwPh_46713301_202001
+-- importuje faktury prijate z Money do Pohody
 
 DECLARE @Fa_INSERTED TABLE(ID INT)
 
@@ -84,9 +79,9 @@ SELECT DISTINCT
 	FROM S4_Agenda_PEMA.dbo.Fakturace_FakturaVydana AS Fa
 	LEFT JOIN StwPh_46713301_202001.dbo.sDPH AS PhsDPH ON PhsDPH.IDS = 'UD'
 	LEFT JOIN StwPh_46713301_202001.dbo.sSTR AS PhsSTR ON PhsSTR.IDS = 'NP'
-	LEFT JOIN S4_Agenda_PEMA.dbo.Ciselniky_ZpusobPlatby AS ZP ON ZP.ID = Fa.ZpusobPlatby_ID
-	LEFT JOIN S4_Agenda_PEMA.dbo.Fakturace_PolozkaFakturyVydane AS FaPol ON FaPol.Parent_ID = Fa.ID AND FaPol.PreneseniDane_ID IS NOT NULL
-	INNER JOIN S4_Agenda_PEMA.dbo.System_Groups AS Grp ON Grp.ID = Fa.Group_ID
+	LEFT JOIN Ciselniky_ZpusobPlatby AS ZP ON ZP.ID = Fa.ZpusobPlatby_ID
+	LEFT JOIN Fakturace_PolozkaFakturyVydane AS FaPol ON FaPol.Parent_ID = Fa.ID AND FaPol.PreneseniDane_ID IS NOT NULL
+	INNER JOIN System_Groups AS Grp ON Grp.ID = Fa.Group_ID
 	WHERE
 		(Grp.Kod != 'FASEKY' OR Grp.Kod IS NULL)
 		AND Fa.DatumVystaveni < DATEADD(day, -4, GETDATE())
@@ -147,9 +142,9 @@ SELECT DISTINCT
 		2 AS RelTpCalcDPH
 	FROM S4_Agenda_PEMA.dbo.Fakturace_FakturaPrijata AS Fa
 	LEFT JOIN StwPh_46713301_202001.dbo.sDPH AS PhsDPH ON PhsDPH.IDS = 'PD'
-	LEFT JOIN S4_Agenda_PEMA.dbo.Ciselniky_Banka AS Banka ON Banka.ID = Fa.Banka_ID
-	LEFT JOIN S4_Agenda_PEMA.dbo.Fakturace_PolozkaFakturyVydane AS FaPol ON FaPol.Parent_ID = Fa.ID AND FaPol.PreneseniDane_ID IS NOT NULL
-	INNER JOIN S4_Agenda_PEMA.dbo.System_Groups AS Grp ON Grp.ID = Fa.Group_ID
+	LEFT JOIN Ciselniky_Banka AS Banka ON Banka.ID = Fa.Banka_ID
+	LEFT JOIN Fakturace_PolozkaFakturyVydane AS FaPol ON FaPol.Parent_ID = Fa.ID AND FaPol.PreneseniDane_ID IS NOT NULL
+	INNER JOIN System_Groups AS Grp ON Grp.ID = Fa.Group_ID
 	WHERE Fa.DatumVystaveni < DATEADD(day, -2, GETDATE())
 )
 

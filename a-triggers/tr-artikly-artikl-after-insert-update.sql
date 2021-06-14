@@ -1,4 +1,4 @@
-CREATE OR ALTER TRIGGER TR_Artikly_Artikl_AfterInsertUpdate
+CREATE OR ALTER TRIGGER USER_Artikly_Artikl_AfterInsertUpdate
 ON Artikly_Artikl
 AFTER INSERT, UPDATE
 AS

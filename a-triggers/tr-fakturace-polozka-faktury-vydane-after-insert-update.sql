@@ -1,15 +1,14 @@
-CREATE OR ALTER TRIGGER TR_Objednavky_PolozkaObjednavkyPrijate_AfterInsertUpdate
-ON Objednavky_PolozkaObjednavkyPrijate
+CREATE OR ALTER TRIGGER USER_Fakturace_PolozkaFakturyVydane_AfterInsertUpdate
+ON Fakturace_PolozkaFakturyVydane
 AFTER INSERT, UPDATE
 AS
 BEGIN
-	
 	/* marze, nakupni cena do polozky */
-	UPDATE Objednavky_PolozkaObjednavkyPrijate SET
+	UPDATE Fakturace_PolozkaFakturyVydane SET
 		Marze_UserData = IIF(Cena.JednotkovaSkladovaCena = 0, 0, ROUND(100/Cena.JednotkovaSkladovaCena*(Pol.JednCena-Cena.JednotkovaSkladovaCena), 2)),
 		NakupniCena_UserData = Cena.JednotkovaSkladovaCena
-	FROM Objednavky_PolozkaObjednavkyPrijate AS Pol
+	FROM Fakturace_PolozkaFakturyVydane AS Pol
 	INNER JOIN inserted ON inserted.ID = Pol.ID
 	INNER JOIN Obchod_ObsahPolozkySArtiklem AS Obsah ON Obsah.ID = Pol.ObsahPolozky_ID
-	INNER JOIN CSW_BI_StavSkladuVCenach AS Cena ON Cena.Artikl_ID = Obsah.Artikl_ID
-END
+	INNER JOIN CSW_BI_StavSkladuVCenach AS Cena ON Cena.Artikl_ID = Obsah.Artikl_ID;
+END;

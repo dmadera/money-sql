@@ -1,4 +1,4 @@
-CREATE OR ALTER TRIGGER TR_Objednavky_PolozkaNabidkyVydane_AfterInsertUpdate
+CREATE OR ALTER TRIGGER USER_Objednavky_PolozkaNabidkyVydane_AfterInsertUpdate
 ON Objednavky_PolozkaNabidkyVydane
 AFTER INSERT, UPDATE
 AS

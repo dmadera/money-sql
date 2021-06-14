@@ -1,4 +1,4 @@
-CREATE OR ALTER TRIGGER TR_Adresar_Firma_AfterInsertUpdate
+CREATE OR ALTER TRIGGER USER_Adresar_Firma_AfterInsertUpdate
 ON Adresar_Firma
 AFTER INSERT, UPDATE
 AS

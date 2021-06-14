@@ -1,4 +1,4 @@
-CREATE OR ALTER TRIGGER TR_Sklady_StavZasoby_AfterInsert
+CREATE OR ALTER TRIGGER USER_Sklady_StavZasoby_AfterInsert
 ON Sklady_StavZasoby
 AFTER INSERT, UPDATE
 AS
