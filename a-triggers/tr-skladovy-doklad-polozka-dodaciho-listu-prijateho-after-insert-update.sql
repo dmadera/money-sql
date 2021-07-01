@@ -25,9 +25,16 @@ BEGIN
 		SELECT 
 			Pol.ID,
 			Obs.Artikl_ID,
-			Pol.Mnozstvi
+			Pol.Mnozstvi,
+			CASE 
+				WHEN Pol.Vratka = 1 AND Doklad.ZapornyPohyb = 1 THEN 0
+				WHEN Pol.Vratka = 1 AND Doklad.ZapornyPohyb = 0 THEN 1
+				WHEN Pol.Vratka = 0 AND Doklad.ZapornyPohyb = 1 THEN 1
+				ELSE 0
+			END AS Vratka
 		FROM SkladovyDoklad_PolozkaDodacihoListuPrijateho AS Pol
 		INNER JOIN Obchod_ObsahPolozkySArtiklem AS Obs ON Obs.ID = Pol.ObsahPolozky_ID
+		INNER JOIN SkladovyDoklad_DodaciListPrijaty AS Doklad ON Doklad.ID = Pol.Parent_ID
 		WHERE Pol.Parent_ID = @Cursor_ID;
 
 		EXEC USER_PolozkyMnozstviVJednotkach @Polozky, @MnozstviVJednotkach OUTPUT, 0;

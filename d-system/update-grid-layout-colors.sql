@@ -49,7 +49,7 @@ IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
 		WHERE Color.ID = 'D4D80FD4-24C7-4E43-8950-91B0DF20AC5E';
 
 UPDATE MetaData_GridColors SET
-	Condition = '([Zbyva] > [ZustatekMnozstvi] - [Rezervovano] AND [PriznakVyrizeno] = 0)',
+	Condition = '([Zbyva] > [ZustatekMnozstvi] AND [PriznakVyrizeno] = 0)',
 	Priority = 10,
 	BackColor = -1, 
 	FontColor = @Bordo, 

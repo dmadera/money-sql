@@ -8,11 +8,13 @@ SELECT
 	CASE
 		WHEN PocitatProdej = 0 THEN -1
 		WHEN ZasobaAVG.Zasoba_ID IS NULL THEN 0
+		WHEN DATEDIFF(dd, ZasobaAVG.PrvniPohyb, GETDATE()) = 0 THEN 0
 		ELSE ROUND(ZasobaAVG.SumMnozstvi / DATEDIFF(dd, ZasobaAVG.PrvniPohyb, GETDATE()) * 20, 0) 
 	END AS ProdejAvg,
 	CASE
 		WHEN PocitatProdej = 0 THEN -1
 		WHEN ZasobaMED.Zasoba_ID IS NULL THEN 0
+		WHEN DATEDIFF(dd, ZasobaMED.PrvniPohyb, GETDATE()) = 0 THEN 0
 		ELSE ROUND(ZasobaMED.SumMedian / DATEDIFF(dd, ZasobaMED.PrvniPohyb, GETDATE()) * 20, 0) 
 	END AS ProdejMed
 FROM Sklady_Zasoba AS Zasoba WITH(NOLOCK) 

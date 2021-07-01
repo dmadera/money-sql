@@ -6,7 +6,7 @@ BEGIN
 	
 	/* marze, nakupni cena do polozky */
 	UPDATE Objednavky_PolozkaNabidkyVydane SET
-		Marze_UserData = IIF(Cena.JednotkovaSkladovaCena = 0, 0, ROUND(100/Cena.JednotkovaSkladovaCena*(Pol.JednCena-Cena.JednotkovaSkladovaCena), 2)),
+		Marze_UserData = IIF(Cena.JednotkovaSkladovaCena = 0 OR Pol.JednCena = 0, 0, ROUND(100/Cena.JednotkovaSkladovaCena*(Pol.JednCena-Cena.JednotkovaSkladovaCena), 2)),
 		NakupniCena_UserData = Cena.JednotkovaSkladovaCena
 	FROM Objednavky_PolozkaNabidkyVydane AS Pol
 	INNER JOIN inserted ON inserted.ID = Pol.ID

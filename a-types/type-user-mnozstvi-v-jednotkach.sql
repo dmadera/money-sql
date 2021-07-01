@@ -4,5 +4,6 @@ CREATE TYPE USER_MnozstviVJednotkach AS TABLE (
 	[VychoziMnozstvi] [int] NULL,
 	[Mnozstvi] [int] NULL,
 	[MnozstviVychoziJednotka] [int] NULL,
-	[JeVychoziJednotka] [bit] NULL
+	[JeVychoziJednotka] [bit] NULL,
+	[Vratka] [bit] NULL
 );

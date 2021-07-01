@@ -9,7 +9,7 @@ do
     do
         echo "PRINT 'Processing file $f.';" >> $fname
         echo "GO" >> $fname
-        f=${f/./\\\\tsclient\\dmadera\\projects\\money-sql}
+        f=${f/./\\\\tsclient\\_home_dmadera\\projects\\money-sql}
         echo ":r ${f//\//\\}" >> $fname
         echo "GO" >> $fname
     done
@@ -20,7 +20,7 @@ echo "" > $fname
 echo "Writting $fname"
 
 f='./a-drop-all.sql'
-f=${f/./\\\\tsclient\\dmadera\\projects\\money-sql}
+f=${f/./\\\\tsclient\\_home_dmadera\\projects\\money-sql}
 echo "PRINT 'Dropping all objects.';" >> $fname
 echo "GO" >> $fname
 echo ":r ${f//\//\\}" >> $fname
@@ -32,7 +32,7 @@ do
     echo "GO" >> $fname
     for f in $(find $dir -type f -name '*.sql' | sort)
     do
-        f=${f/./\\\\tsclient\\dmadera\\projects\\money-sql}
+        f=${f/./\\\\tsclient\\_home_dmadera\\projects\\money-sql}
         echo ":r ${f//\//\\}" >> $fname
         echo "GO" >> $fname
     done

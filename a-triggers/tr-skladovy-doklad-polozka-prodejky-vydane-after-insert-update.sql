@@ -15,7 +15,7 @@ BEGIN
 			WHEN Zas.DostupneMnozstvi < 0 THEN '-'
 			ELSE ''
 		END),
-		Marze_UserData = IIF(Cena.JednotkovaSkladovaCena = 0, 0, ROUND(100/Cena.JednotkovaSkladovaCena*(Pol.JednCena-Cena.JednotkovaSkladovaCena), 2)),
+		Marze_UserData = IIF(Cena.JednotkovaSkladovaCena = 0 OR Pol.JednCena = 0, 0, ROUND(100/Cena.JednotkovaSkladovaCena*(Pol.JednCena-Cena.JednotkovaSkladovaCena), 2)),
 		NakupniCena_UserData = Cena.JednotkovaSkladovaCena,
 		RPDP_UserData = IIF(Art.PreneseniDane_ID IS NULL, '', 'RPDP')
 	FROM SkladovyDoklad_PolozkaProdejkyVydane AS Pol
@@ -39,9 +39,16 @@ BEGIN
 		SELECT 
 			Pol.ID,
 			Obs.Artikl_ID,
-			Pol.Mnozstvi
+			Pol.Mnozstvi,
+			CASE 
+				WHEN Pol.Vratka = 1 AND Doklad.ZapornyPohyb = 1 THEN 0
+				WHEN Pol.Vratka = 1 AND Doklad.ZapornyPohyb = 0 THEN 1
+				WHEN Pol.Vratka = 0 AND Doklad.ZapornyPohyb = 1 THEN 1
+				ELSE 0
+			END AS Vratka
 		FROM SkladovyDoklad_PolozkaProdejkyVydane AS Pol
 		INNER JOIN Obchod_ObsahPolozkySArtiklem AS Obs ON Obs.ID = Pol.ObsahPolozky_ID
+		INNER JOIN SkladovyDoklad_ProdejkaVydana AS Doklad ON Doklad.ID = Pol.Parent_ID
 		WHERE Pol.Parent_ID = @Cursor_ID;
 
 		EXEC USER_PolozkyMnozstviVJednotkach @Polozky, @MnozstviVJednotkach OUTPUT, 0;

@@ -1,29 +1,29 @@
 
 PRINT 'Processing file ./d-agenda/update-firma-ciselna-rada.sql.';
 GO
-:r \\tsclient\dmadera\projects\money-sql\d-agenda\update-firma-ciselna-rada.sql
+:r \\tsclient\_home_dmadera\projects\money-sql\d-agenda\update-firma-ciselna-rada.sql
 GO
 PRINT 'Processing file ./d-agenda/update-firma-platba.sql.';
 GO
-:r \\tsclient\dmadera\projects\money-sql\d-agenda\update-firma-platba.sql
+:r \\tsclient\_home_dmadera\projects\money-sql\d-agenda\update-firma-platba.sql
 GO
 PRINT 'Processing file ./d-agenda/update-katalog-ciselna-rada.sql.';
 GO
-:r \\tsclient\dmadera\projects\money-sql\d-agenda\update-katalog-ciselna-rada.sql
+:r \\tsclient\_home_dmadera\projects\money-sql\d-agenda\update-katalog-ciselna-rada.sql
 GO
 PRINT 'Processing file ./d-agenda/update-katalog-druh-artiklu.sql.';
 GO
-:r \\tsclient\dmadera\projects\money-sql\d-agenda\update-katalog-druh-artiklu.sql
+:r \\tsclient\_home_dmadera\projects\money-sql\d-agenda\update-katalog-druh-artiklu.sql
 GO
 PRINT 'Processing file ./d-agenda/update-katalog-jednotky.sql.';
 GO
-:r \\tsclient\dmadera\projects\money-sql\d-agenda\update-katalog-jednotky.sql
+:r \\tsclient\_home_dmadera\projects\money-sql\d-agenda\update-katalog-jednotky.sql
 GO
 PRINT 'Processing file ./d-agenda/update-koncept-seky.sql.';
 GO
-:r \\tsclient\dmadera\projects\money-sql\d-agenda\update-koncept-seky.sql
+:r \\tsclient\_home_dmadera\projects\money-sql\d-agenda\update-koncept-seky.sql
 GO
 PRINT 'Processing file ./d-agenda/update-min-prodejnost-zasoby.sql.';
 GO
-:r \\tsclient\dmadera\projects\money-sql\d-agenda\update-min-prodejnost-zasoby.sql
+:r \\tsclient\_home_dmadera\projects\money-sql\d-agenda\update-min-prodejnost-zasoby.sql
 GO

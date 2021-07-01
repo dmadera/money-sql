@@ -1,6 +1,7 @@
 CREATE OR ALTER PROCEDURE USER_MnozstviArtikluVJednotkach (
 	@ID UNIQUEIDENTIFIER,
 	@Mnozstvi INT,
+	@Vratka BIT,
 	@ZobrazVysledek BIT = 0
 ) AS BEGIN
 	
@@ -29,7 +30,8 @@ CREATE OR ALTER PROCEDURE USER_MnozstviArtikluVJednotkach (
 			VychoziMnozstvi,
 			FLOOR(@Mnozstvi/VychoziMnozstvi),
 			FLOOR(@Mnozstvi/VychoziMnozstvi) * VychoziMnozstvi,
-			IIF(ParentJednotka_ID IS NULL, 1, 0)
+			IIF(ParentJednotka_ID IS NULL, 1, 0),
+			@Vratka
 		FROM Artikly_ArtiklJednotka WHERE ID = @Cursor_ID;
 
 		SET @Mnozstvi -= (SELECT FLOOR(@Mnozstvi/VychoziMnozstvi) * VychoziMnozstvi FROM Artikly_ArtiklJednotka WHERE ID = @Cursor_ID);
