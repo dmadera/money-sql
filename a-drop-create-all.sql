@@ -13,11 +13,13 @@ PRINT 'Creating objects from dir ./a-views.';
 GO
 :r \\tsclient\_home_dmadera\projects\money-sql\a-views\view-user-artikly-baleni.sql
 GO
+:r \\tsclient\_home_dmadera\projects\money-sql\a-views\view-user-artikly-dph.sql
+GO
 :r \\tsclient\_home_dmadera\projects\money-sql\a-views\view-user-artikly-kategorie.sql
 GO
 :r \\tsclient\_home_dmadera\projects\money-sql\a-views\view-user-artikly-priznaky.sql
 GO
-:r \\tsclient\_home_dmadera\projects\money-sql\a-views\view-user-artikly-sazba.sql
+:r \\tsclient\_home_dmadera\projects\money-sql\a-views\view-user-artikly-stitek.sql
 GO
 :r \\tsclient\_home_dmadera\projects\money-sql\a-views\view-user-polozky-ceniku.sql
 GO
@@ -33,6 +35,8 @@ GO
 GO
 :r \\tsclient\_home_dmadera\projects\money-sql\a-procedures\proc-user-polozky-mnozstvi-v-jednotkach.sql
 GO
+:r \\tsclient\_home_dmadera\projects\money-sql\a-procedures\proc-user-prodejnost-zasob.sql
+GO
 PRINT 'Creating objects from dir ./a-triggers.';
 GO
 :r \\tsclient\_home_dmadera\projects\money-sql\a-triggers\tr-adresar-firma-after-insert-update.sql
@@ -40,10 +44,6 @@ GO
 :r \\tsclient\_home_dmadera\projects\money-sql\a-triggers\tr-artikly-artikl-after-insert-update.sql
 GO
 :r \\tsclient\_home_dmadera\projects\money-sql\a-triggers\tr-ceniky-polozka-ceniku-after-insert-update.sql
-GO
-:r \\tsclient\_home_dmadera\projects\money-sql\a-triggers\tr-fakturace-faktura-vydana-after-insert.sql
-GO
-:r \\tsclient\_home_dmadera\projects\money-sql\a-triggers\tr-fakturace-faktura-vydana-after-update.sql
 GO
 :r \\tsclient\_home_dmadera\projects\money-sql\a-triggers\tr-fakturace-polozka-faktury-vydane-after-insert-update.sql
 GO
@@ -53,15 +53,15 @@ GO
 GO
 :r \\tsclient\_home_dmadera\projects\money-sql\a-triggers\tr-objednavky-polozka-objednavky-vydane-after-insert-update.sql
 GO
+:r \\tsclient\_home_dmadera\projects\money-sql\a-triggers\tr-skladovy-doklad-dodaci-list-vydany-after-insert-update.sql
+GO
 :r \\tsclient\_home_dmadera\projects\money-sql\a-triggers\tr-skladovy-doklad-polozka-dodaciho-listu-prijateho-after-insert-update.sql
 GO
 :r \\tsclient\_home_dmadera\projects\money-sql\a-triggers\tr-skladovy-doklad-polozka-dodaciho-listu-vydaneho-after-insert-update.sql
 GO
 :r \\tsclient\_home_dmadera\projects\money-sql\a-triggers\tr-skladovy-doklad-polozka-prodejky-vydane-after-insert-update.sql
 GO
-:r \\tsclient\_home_dmadera\projects\money-sql\a-triggers\tr-skladovy-doklad-prodejka-vydana-after-insert.sql
-GO
-:r \\tsclient\_home_dmadera\projects\money-sql\a-triggers\tr-skladovy-doklad-prodejka-vydana-after-update.sql
+:r \\tsclient\_home_dmadera\projects\money-sql\a-triggers\tr-skladovy-doklad-prodejka-vydana-after-insert-update.sql
 GO
 :r \\tsclient\_home_dmadera\projects\money-sql\a-triggers\tr-sklady-stav-zasoby-after-insert-update.sql
 GO

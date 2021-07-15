@@ -58,6 +58,34 @@ BEGIN
 	FROM Artikly_Artikl AS Artikl
 	INNER JOIN inserted ON inserted.ID = Artikl.ID
 	INNER JOIN Ceniky_PolozkaCeniku AS Cena ON Cena.Artikl_ID = Artikl.ID AND Cena.Cenik_ID = @VychoziCenik_ID;
+
+	UPDATE Artikly_Artikl SET
+		StitekNazev_UserData = ArtStitek.Nazev,
+		StitekBaleni_UserData = ArtStitek.BaleniMnozstvi, 
+		StitekBaleniJed_UserData = ArtStitek.BaleniJednotky,
+		StitekCena_UserData = ArtStitek.ProdejniCena, 
+		StitekMnozstvi_UserData = ArtStitek.Mnozstvi,
+		StitekSazba_UserData = ISNULL(Sazba.Sazba, 0),
+		StitekTisk_UserData = 1
+	FROM inserted
+	INNER JOIN USER_ArtiklyStitek AS ArtStitek ON inserted.ID = ArtStitek.ID
+	INNER JOIN Artikly_Artikl AS Art ON Art.ID = ArtStitek.ID
+	LEFT JOIN USER_ARtiklyDph AS Sazba ON Sazba.ID = Art.ID
+	WHERE 
+		Art.StitekTisk_UserData = 0 AND (
+			Art.StitekNazev_UserData != ArtStitek.Nazev
+			OR Art.StitekBaleni_UserData != ArtStitek.BaleniMnozstvi
+			OR Art.StitekBaleniJed_UserData != ArtStitek.BaleniJednotky
+			OR Art.StitekSazba_UserData != Sazba.Sazba
+			OR Art.StitekCena_UserData != ArtStitek.ProdejniCena
+			OR (Art.StitekMnozstvi_UserData = 0 AND ArtStitek.Mnozstvi > 0)
+		);
+
+	UPDATE Artikly_ArtiklJednotka SET
+		NedelitelneMnozstvi = 0
+	FROM Artikly_ArtiklJednotka AS ArtJed
+	INNER JOIN inserted AS Art ON Art.ID = ArtJed.Parent_ID
+	WHERE ArtJed.ParentJednotka_ID IS NOT NULL;
 	
 	UPDATE Sklady_Zasoba SET
 		BaleniMnozstvi_UserData = Artikl.BaleniMnozstvi_UserData,

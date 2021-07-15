@@ -1,4 +1,4 @@
-CREATE OR ALTER TRIGGER USER_SkladovyDoklad_PolozkaDodacihoListuVydaneho_AfterInsert
+CREATE OR ALTER TRIGGER USER_SkladovyDoklad_PolozkaDodacihoListuVydaneho_AfterInsertUpdate
 ON SkladovyDoklad_PolozkaDodacihoListuVydaneho
 AFTER INSERT, UPDATE
 AS
@@ -24,7 +24,7 @@ BEGIN
 	INNER JOIN CSW_BI_StavSkladuVCenach AS Cena ON Cena.Artikl_ID = Obsah.Artikl_ID
 	INNER JOIN Artikly_Artikl AS Art ON Art.ID = Obsah.Artikl_ID
 
-
+	/*
 	DECLARE @Polozky AS USER_PolozkaDokladu;
 	DECLARE @MnozstviVJednotkach NVARCHAR(MAX);
 	DECLARE @Cursor_ID UNIQUEIDENTIFIER;
@@ -61,5 +61,5 @@ BEGIN
 	END;
 	CLOSE MY_CURSOR;
 	DEALLOCATE MY_CURSOR;
-	
+	*/
 END

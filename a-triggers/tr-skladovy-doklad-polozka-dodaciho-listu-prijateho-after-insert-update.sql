@@ -11,7 +11,7 @@ BEGIN
 	INNER JOIN Obchod_ObsahPolozkySArtiklem AS ObsahPol ON ObsahPol.Artikl_ID = Cena.Artikl_ID
 	INNER JOIN inserted AS Polozka ON Polozka.ObsahPolozky_ID = ObsahPol.ID;
 
-	DECLARE @Polozky AS USER_PolozkaDokladu;
+	/*DECLARE @Polozky AS USER_PolozkaDokladu;
 	DECLARE @MnozstviVJednotkach NVARCHAR(MAX);
 	DECLARE @Cursor_ID UNIQUEIDENTIFIER;
 	DECLARE MY_CURSOR CURSOR LOCAL FAST_FORWARD FOR 
@@ -46,6 +46,6 @@ BEGIN
 		FETCH NEXT FROM MY_CURSOR INTO @Cursor_ID;
 	END;
 	CLOSE MY_CURSOR;
-	DEALLOCATE MY_CURSOR;
+	DEALLOCATE MY_CURSOR;*/
 
 END

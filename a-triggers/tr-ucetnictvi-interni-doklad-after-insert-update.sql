@@ -1,10 +1,12 @@
-CREATE OR ALTER TRIGGER USER_Ucetnictvi_InterniDoklad
+CREATE OR ALTER TRIGGER USER_Ucetnictvi_InterniDoklad_AfterInsert
 ON Ucetnictvi_InterniDoklad
 AFTER UPDATE
 AS
 BEGIN
 	UPDATE Ucetnictvi_InterniDoklad SET 
 		Nazev = CASE
+			WHEN ID.CisloDokladu =  '_SK000000'
+				THEN 'NEMAZAT koncept šeku'
 			WHEN D.CisloDokladu IS NULL OR D.Deleted = 1 
 				THEN 'Neplatný šek - doklad zrušen'
 			WHEN D.Deleted = 0 AND (D.SumaCelkem < 5000 OR (Fir.VlastniSleva = 1 AND Fir.HodnotaSlevy <> 0) OR Fir.Sek_UserData = '-SEK') 
@@ -29,21 +31,20 @@ BEGIN
 		WHERE PR.Deleted = 0
 		UNION
 		SELECT 
-			CisloDokladu, FA.SumaCelkem - ISNULL(ODD.SumaCelkem, 0), Firma_ID, FA.Deleted,
+			CisloDokladu, DL.SumaCelkem - ISNULL(ODD.SumaCelkem, 0), Firma_ID, DL.Deleted,
 			ROUND(CASE 
-				WHEN FA.SumaCelkem - ISNULL(ODD.SumaCelkem, 0) >= 10000 THEN (FA.SumaCelkem - ISNULL(ODD.SumaCelkem, 0)) / 100 * 1.5
-				WHEN FA.SumaCelkem - ISNULL(ODD.SumaCelkem, 0) >= 5000 THEN (FA.SumaCelkem - ISNULL(ODD.SumaCelkem, 0)) / 100 * 1
+				WHEN DL.SumaCelkem - ISNULL(ODD.SumaCelkem, 0) >= 10000 THEN (DL.SumaCelkem - ISNULL(ODD.SumaCelkem, 0)) / 100 * 1.5
+				WHEN DL.SumaCelkem - ISNULL(ODD.SumaCelkem, 0) >= 5000 THEN (DL.SumaCelkem - ISNULL(ODD.SumaCelkem, 0)) / 100 * 1
 			ELSE 0 END, 0) AS SumaSek
-		FROM Fakturace_FakturaVydana AS FA
+		FROM SkladovyDoklad_DodaciListVydany AS DL
 		LEFT JOIN (
 			SELECT
-				Vazba.Zdroj_ID, SUM(FV.CelkovaCastka) AS SumaCelkem
-			FROM Fakturace_FakturaVydana AS FV
-			INNER JOIN EconomicBase_VazbaObjektu AS Vazba ON Vazba.Cil_ID = FV.ID AND Vazba.CilTableName = 'Fakturace_FakturaVydana'
-			WHERE FV.Deleted = 0 AND FV.ZapornyPohyb = 1
-			GROUP BY Vazba.Zdroj_ID
-		) AS ODD ON ODD.Zdroj_ID = FA.ID
-		WHERE FA.Deleted = 0
+				Dl.ParovaciSymbol, SUM(DL.CelkovaCastka) AS SumaCelkem
+			FROM SkladovyDoklad_DodaciListVydany AS Dl
+			WHERE Dl.Deleted = 0 AND Dl.ZapornyPohyb = 1
+			GROUP BY Dl.ParovaciSymbol
+		) AS ODD ON ODD.ParovaciSymbol = DL.CisloDokladu
+		WHERE DL.Deleted = 0
 	) AS D ON D.CisloDokladu = ID.ParovaciSymbol
 	LEFT JOIN Adresar_Firma AS Fir ON Fir.ID = D.Firma_ID
 	WHERE Grp.Kod = 'SEKY'

@@ -87,3 +87,20 @@ UPDATE MetaData_GridColors SET
 	FontColor = @Bordo, 
 	FontStyle = 0
 	WHERE Name = @Name;
+
+
+SET @Name = 'Neni na sklade';
+IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
+	INSERT INTO MetaData_GridColors 
+		(Object_ID, Name, IsUser, IsGenerated)
+		SELECT TOP 1 Obj.ID, @Name, 1, 0
+		FROM MetaData_Objects AS Obj
+		WHERE Obj.ObjectName = 'Artikl';
+
+UPDATE MetaData_GridColors SET
+	Condition = '([CelkoveMnozstviNaSkladech] <= 0)',
+	Priority = 10,
+	BackColor = -1, 
+	FontColor = @Bordo, 
+	FontStyle = 0
+	WHERE Name = @Name;
