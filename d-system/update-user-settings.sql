@@ -1,4 +1,4 @@
-update System_UserSettings SET
+UPDATE System_UserSettings SET
 	PamatovatSiSloupec = 1,
 	PositionDetailTabs = 1,
 	SumovatPoPridaniVsechPolozek = 0,

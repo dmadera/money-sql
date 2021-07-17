@@ -1,6 +1,0 @@
-CREATE TYPE USER_PolozkaDokladu AS TABLE (
-    ID UNIQUEIDENTIFIER,
-	Artikl_ID UNIQUEIDENTIFIER,
-	Mnozstvi INT,
-	Vratka BIT
-);
