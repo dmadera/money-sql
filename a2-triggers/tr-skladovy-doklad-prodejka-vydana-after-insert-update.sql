@@ -18,7 +18,7 @@ BEGIN
 			AdresaMisto, AdresaNazev, AdresaPSC, AdresaStat, AdresaUlice,
 			AdresaKontaktniOsobaJmeno, AdresaKontaktniOsobaNazev, AdresaKontaktniOsobaPrijmeni, 
 			Osoba_ID, Firma_ID, IC, Jmeno, DIC
-        ) SELECT
+        ) SELECT DISTINCT
             ID.Group_ID, 0, 0, 0, 
             ID.CleneniDPH_ID, ID.DomaciMena_ID, ID.Predkontace_ID, ID.PredkontaceZaokrouhleni_ID, ID.RegistraceDPH_ID, 
 			ID.UcetDal_ID, ID.UcetMD_ID, ID.PrimarniUcetMD_ID, ID.PrimarniUcetDal_ID,
@@ -35,13 +35,17 @@ BEGIN
         FROM inserted as D
 		INNER JOIN System_Groups AS Grp ON Grp.ID = D.Group_ID
         INNER JOIN Adresar_Firma AS Fir ON Fir.ID = D.Firma_ID
-		LEFT JOIN Adresar_FirmaAdresniKlic AS FirAdrKl ON FirAdrKl.Parent_ID = D.Firma_ID
-		LEFT JOIN Adresar_AdresniKlic AS AdrKlic ON AdrKlic.ID = FirAdrKl.AdresniKlic_ID AND AdrKlic.Kod = '-SEK'
+		LEFT JOIN (
+			SELECT FirAdrKl.ID AS ID, FirAdrKl.Parent_ID AS Parent_ID
+			FROM Adresar_FirmaAdresniKlic AS FirAdrKl
+			INNER JOIN Adresar_AdresniKlic AS AdrKlic ON AdrKlic.ID = FirAdrKl.AdresniKlic_ID
+			WHERE AdrKlic.Kod = '-SEK'
+		) AS AdrKlicSek ON AdrKlicSek.Parent_ID = D.Firma_ID
 		LEFT JOIN Ucetnictvi_InterniDoklad AS IDa ON IDa.ParovaciSymbol = D.CisloDokladu
         LEFT JOIN Ucetnictvi_InterniDoklad AS ID ON ID.CisloDokladu = '_SK000000'
         WHERE 
 			Grp.Kod = 'PRODEJKY'
-			AND AdrKlic.ID IS NULL
+			AND AdrKlicSek.ID IS NULL
 			AND D.SumaCelkem >= 5000 
 			AND (Fir.VlastniSleva = 0 OR Fir.HodnotaSlevy <= 0) 
 			AND IDa.ID IS NULL;
