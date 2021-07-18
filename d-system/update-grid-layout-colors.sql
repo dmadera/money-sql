@@ -137,3 +137,20 @@ UPDATE MetaData_GridColors SET
 	FontColor = @Bordo, 
 	FontStyle = 0
 WHERE Name = @Name;	
+
+SET @Name = 'Firma povoleno na FA';
+IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
+	INSERT INTO MetaData_GridColors 
+		(Object_ID, Name, IsUser, IsGenerated)
+		SELECT O.ID, @Name, 1, 0 
+		FROM MetaData_GridTables AS T 
+		INNER JOIN MetaData_Objects AS O ON O.ID = T.Object_ID 
+		WHERE T.TableName = 'Adresar_Firma' AND O.ObjectName = 'ObjednavkaPrijata';
+
+UPDATE MetaData_GridColors SET
+	Condition = '([KreditFA] LIKE ''FA%'' )',
+	Priority = 10,
+	BackColor = -1, 
+	FontColor = @Blue, 
+	FontStyle = 0
+	WHERE Name = @Name;

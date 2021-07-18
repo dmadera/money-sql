@@ -11,6 +11,13 @@ WHERE
 	OR ColumnName LIKE '%rezervovano%'
 
 UPDATE MetaData_GridColumns SET
+	DecimalCount = 1
+FROM MetaData_GridColumns
+INNER JOIN MetaData_GridTables AS T ON T.ID = Table_ID
+WHERE 
+	ColumnName LIKE '%marze%'
+
+UPDATE MetaData_GridColumns SET
 	DecimalCount = 2
 FROM MetaData_GridColumns
 INNER JOIN MetaData_GridTables AS T ON T.ID = Table_ID

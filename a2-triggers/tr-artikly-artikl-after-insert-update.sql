@@ -18,7 +18,7 @@ BEGIN
 
 	-- produktove klice - spoji jako retezec do UserData pole
 	UPDATE Artikly_Artikl SET 
-		Priznaky_UserData = ISNULL(ArtPriz.Priznaky, ''),
+		PLU = ISNULL(ArtPriz.Priznaky, ''),
 		BaleniJednotky_UserData = ISNULL(ArtBal.Jednotky, ''),
 		BaleniMnozstvi_UserData = ISNULL(ArtBal.Mnozstvi, ''),
 		KategorieRetezec_UserData = ISNULL(ArtKat.KategorieRetezec, ''),
@@ -42,7 +42,6 @@ BEGIN
 		PosledniNaskladneni_UserData = ISNULL(PoslPrijem.Datum, CAST('1753-01-01 00:00:00' AS DATETIME)),
 		VypocetVyseZmeny = 0,
 		NepodlehatSleveDokladu = PolCen.NepodlehaSleveDokladu,
-		Priznaky_UserData = Artikl.Priznaky_UserData,
 		DruhPolozkyKatalogu_UserData = Druh.Nazev
 	FROM Ceniky_PolozkaCeniku AS Cena
 	INNER JOIN inserted ON inserted.ID = Cena.Artikl_ID
@@ -90,7 +89,6 @@ BEGIN
 	UPDATE Sklady_Zasoba SET
 		BaleniMnozstvi_UserData = Artikl.BaleniMnozstvi_UserData,
 		BaleniJednotky_UserData = Artikl.BaleniJednotky_UserData,
-		Priznaky_UserData = Artikl.Priznaky_UserData,
 		NakupniCena_UserData = Artikl.NakupniCena_UserData,
 		Marze_UserData = Artikl.Marze_UserData,
 		DruhArtiklu_ID = Artikl.DruhArtiklu_ID,

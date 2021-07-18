@@ -7,6 +7,8 @@ BEGIN
 		Nazev = CASE
 			WHEN ID.CisloDokladu =  '_SK000000'
 				THEN 'NEMAZAT koncept šeku'
+			WHEN D.CisloDokladu IS NULL AND ID.PuvodniDoklad <> ''
+				THEN 'Šek vydaný bez vazby na doklad'
 			WHEN D.CisloDokladu IS NULL OR D.Deleted = 1 
 				THEN 'Neplatný šek - doklad zrušen'
 			WHEN D.Deleted = 0 AND (D.SumaCelkem < 5000 OR (Fir.VlastniSleva = 1 AND Fir.HodnotaSlevy <> 0) OR Fir.Sek_UserData = '-SEK') 
@@ -15,6 +17,7 @@ BEGIN
 				THEN CONCAT(IIF(ID.Faze = 0, 'Šek vydaný na částku ', 'Neplatný šek - opravte na částku '), CONVERT(NUMERIC(10,2), D.SumaSek), ' Kč')
 			WHEN D.Deleted = 0 AND D.Firma_ID <> ID.Firma_ID 
 				THEN CONCAT('Neplatný šek - opravte na odběratele ', Fir.Kod)
+			
 			ELSE 'Šek vydaný'
 		END
 	FROM Ucetnictvi_InterniDoklad AS ID
