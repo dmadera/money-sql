@@ -11,19 +11,17 @@ BEGIN
 	*/
 	UPDATE SkladovyDoklad_PolozkaProdejkyVydane SET
 		MnozstviPozn_UserData = (CASE
-			WHEN Zas.DostupneMnozstvi = 0 THEN '*'
-			WHEN Zas.DostupneMnozstvi < 0 THEN '-'
+			WHEN P.ZustatekMnozstvi = 0 THEN '*'
+			WHEN P.ZustatekMnozstvi < 0 THEN '-'
 			ELSE ''
 		END),
-		Marze_UserData = IIF(Cena.JednotkovaSkladovaCena = 0 OR Pol.JednCena = 0, 0, ROUND(100/Cena.JednotkovaSkladovaCena*(Pol.JednCena-Cena.JednotkovaSkladovaCena), 2)),
-		NakupniCena_UserData = Cena.JednotkovaSkladovaCena,
-		RPDP_UserData = IIF(Art.PreneseniDane_ID IS NULL, '', 'RPDP')
+		Marze_UserData = IIF(P.SkladovaCena = 0 OR Pol.JednCena = 0, 0, ROUND(100/P.SkladovaCena*(Pol.JednCena-P.SkladovaCena), 2)),
+		NakupniCena_UserData = P.SkladovaCena,
+		RPDP_UserData = P.RPDP
 	FROM SkladovyDoklad_PolozkaProdejkyVydane AS Pol
 	INNER JOIN inserted ON inserted.ID = Pol.ID
 	INNER JOIN Obchod_ObsahPolozkySArtiklem AS Obsah ON Obsah.ID = Pol.ObsahPolozky_ID
-	INNER JOIN Sklady_Zasoba AS Zas ON Zas.ID = Obsah.Zasoba_ID
-	INNER JOIN CSW_BI_StavSkladuVCenach AS Cena ON Cena.Artikl_ID = Obsah.Artikl_ID
-	INNER JOIN Artikly_Artikl AS Art ON Art.ID = Obsah.Artikl_ID
+	INNER JOIN USER_PolozkyCeniku P ON P.Artikl_ID = Obsah.Artikl_ID;
 
 /*
 	DECLARE @Polozky AS USER_PolozkaDokladu;

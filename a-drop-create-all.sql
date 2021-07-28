@@ -3,6 +3,10 @@ PRINT 'Dropping all objects.';
 GO
 :r C:\Money\MoneySql\a-drop-all.sql
 GO
+PRINT 'Creating objects from dir ./a-agenda.';
+GO
+:r C:\Money\MoneySql\a-agenda\update-obsah-polozky-jednotka-constraint.sql
+GO
 PRINT 'Creating objects from dir ./a1-types.';
 GO
 :r C:\Money\MoneySql\a1-types\type-user-mnozstvi-v-jednotkach.sql
@@ -25,17 +29,21 @@ GO
 GO
 :r C:\Money\MoneySql\a1-views\view-user-posledni-prijmy-zasoby.sql
 GO
-:r C:\Money\MoneySql\a1-views\view-user-zasoby.sql
+:r C:\Money\MoneySql\a1-views\view-user-zasoby-prodej.sql
+GO
+PRINT 'Creating objects from dir ./a1-views/.vs/a1-views.';
 GO
 PRINT 'Creating objects from dir ./a2-procedures.';
 GO
 :r C:\Money\MoneySql\a2-procedures\proc-user-import-fa-do-pohody.sql
 GO
+:r C:\Money\MoneySql\a2-procedures\proc-user-katalog-jednotky.sql
+GO
 :r C:\Money\MoneySql\a2-procedures\proc-user-mnozstvi-artiklu-v-jednotkach.sql
 GO
 :r C:\Money\MoneySql\a2-procedures\proc-user-polozky-mnozstvi-v-jednotkach.sql
 GO
-:r C:\Money\MoneySql\a2-procedures\proc-user-prodejnost-zasob.sql
+:r C:\Money\MoneySql\a2-procedures\proc-user-zasoba-prodejnost.sql
 GO
 PRINT 'Creating objects from dir ./a2-triggers.';
 GO
@@ -62,8 +70,6 @@ GO
 :r C:\Money\MoneySql\a2-triggers\tr-skladovy-doklad-polozka-prodejky-vydane-after-insert-update.sql
 GO
 :r C:\Money\MoneySql\a2-triggers\tr-skladovy-doklad-prodejka-vydana-after-insert-update.sql
-GO
-:r C:\Money\MoneySql\a2-triggers\tr-sklady-stav-zasoby-after-insert-update.sql
 GO
 :r C:\Money\MoneySql\a2-triggers\tr-ucetnictvi-interni-doklad-after-insert-update.sql
 GO

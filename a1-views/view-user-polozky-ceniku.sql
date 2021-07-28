@@ -31,7 +31,9 @@ SELECT
 		WHEN Cenik.Kod = '_PRODEJ' THEN 0
 		WHEN Cenik.Kod = '_NAKUP'  THEN 0
 		ELSE 1
-	END) AS NepodlehaSleveDokladu
+	END) AS NepodlehaSleveDokladu,
+	StavZas.ZustatekMnozstvi AS ZustatekMnozstvi,
+	IIF(Artikl.PreneseniDane_ID IS NULL, '', 'RPDP') AS RPDP
 FROM dbo.Sklady_Zasoba AS Zasoba WITH (NOLOCK)
 INNER JOIN dbo.Ceniky_PolozkaCeniku AS Cena (NOLOCK) ON Cena.Artikl_ID = Zasoba.Artikl_ID
 INNER JOIN dbo.Ceniky_Cenik AS Cenik WITH (NOLOCK) ON Cenik.ID = Cena.Cenik_ID

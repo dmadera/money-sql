@@ -7,6 +7,8 @@ DECLARE @Red INT = -65536;
 DECLARE @Bordo INT = -4194304;
 DECLARE @Grey INT = -8355712;
 DECLARE @Blue INT = -16748352;
+DECLARE @Green INT = -16738048;
+DECLARE @GreenDark INT = -16751104;
 
 SET @Name = 'Zasoba je objednana';
 IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
@@ -17,7 +19,7 @@ IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
 		WHERE Obj.ObjectName = 'Zasoba';
 
 UPDATE MetaData_GridColors SET
-	Condition = '([StavZobrazeniRadku_UserData] = 2)',
+	Condition = '[Objednano] > 0',
 	Priority = 10,
 	BackColor = -1, 
 	FontColor = @Blue, 
@@ -33,7 +35,7 @@ IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
 		WHERE Obj.ObjectName = 'Zasoba';
 
 UPDATE MetaData_GridColors SET
-	Condition = '([StavZobrazeniRadku_UserData] = 1)',
+	Condition = '[ProdejMinMED_UserData] > [ZustatekMnozstvi] + [Objednano]',
 	Priority = 100,
 	BackColor = -1, 
 	FontColor = @Bordo, 
@@ -115,7 +117,7 @@ IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
 		WHERE Obj.ObjectName = 'PolozkaDodacihoListuVydaneho';
 		
 UPDATE MetaData_GridColors SET
-	Condition = '([MnozstviPozn_UserData] = ''-'')',
+	Condition = '(([MnozstviPozn_UserData] = '''' AND [Mnozstvi] > [ZustatekMnozstvi]) OR ([MnozstviPozn_UserData] = ''-''))',
 	Priority = 10,
 	BackColor = -1, 
 	FontColor = @Bordo, 
@@ -131,7 +133,7 @@ IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
 		WHERE Obj.ObjectName = 'PolozkaProdejkyVydane';
 		
 UPDATE MetaData_GridColors SET
-	Condition = '([MnozstviPozn_UserData] = ''-'')',
+	Condition = '(([MnozstviPozn_UserData] = '''' AND [Mnozstvi] > [ZustatekMnozstvi]) OR ([MnozstviPozn_UserData] = ''-''))',
 	Priority = 10,
 	BackColor = -1, 
 	FontColor = @Bordo, 
@@ -149,8 +151,24 @@ IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
 
 UPDATE MetaData_GridColors SET
 	Condition = '([KreditFA] LIKE ''FA%'' )',
-	Priority = 10,
+	Priority = 50,
 	BackColor = -1, 
-	FontColor = @Blue, 
+	FontColor = @GreenDark, 
 	FontStyle = 0
 	WHERE Name = @Name;
+
+UPDATE MetaData_GridColors SET
+	Priority = 100
+FROM MetaData_GridColors C
+INNER JOIN MetaData_Objects AS O ON O.ID = C.Object_ID 
+WHERE O.ObjectName = 'ObjednavkaPrijata' AND (C.Name = 'Vyøízená objednávka');
+
+DELETE FROM MetaData_GridColors WHERE ID IN (
+	SELECT C.ID 
+	FROM MetaData_GridColors C
+	INNER JOIN MetaData_Objects AS O ON O.ID = C.Object_ID 
+	WHERE O.ObjectName = 'ObjednavkaPrijata' AND (
+		C.Name = 'Nevyøízená objednávka v poslední den platnosti'
+		OR C.Name = 'Nevyøízená objednávka mimo platnost'
+	)
+);
