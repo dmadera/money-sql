@@ -3,6 +3,8 @@ ON Objednavky_PolozkaNabidkyVydane
 AFTER INSERT, UPDATE
 AS
 BEGIN
+	IF SESSION_CONTEXT(N'USER_Objednavky_PolozkaNabidkyVydane_AfterInsertUpdate') = 'disable'
+		RETURN; 
 	
 	/* marze, nakupni cena do polozky */
 	UPDATE Objednavky_PolozkaNabidkyVydane SET

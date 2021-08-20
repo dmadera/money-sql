@@ -3,6 +3,8 @@ ON SkladovyDoklad_DodaciListVydany
 AFTER INSERT, UPDATE
 AS
 BEGIN
+	IF SESSION_CONTEXT(N'USER_SkladovyDoklad_DodaciListVydany_AfterInsertUpdate') = 'disable'
+		RETURN; 
 
 	INSERT INTO Ucetnictvi_InterniDoklad (
             Group_ID, Locked, Deleted, Faze,

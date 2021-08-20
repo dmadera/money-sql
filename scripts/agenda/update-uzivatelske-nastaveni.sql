@@ -1,3 +1,4 @@
+-- aktualizuje u vsech uzivatelu nastaveni
 UPDATE System_UserAgenda SET
 	ShowDeleteDialog = 1, 
 	DataBox_Aktivni = 0, 

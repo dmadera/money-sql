@@ -3,6 +3,8 @@ ON Adresar_Firma
 AFTER INSERT, UPDATE
 AS
 BEGIN
+	IF SESSION_CONTEXT(N'USER_Adresar_Firma_AfterInsertUpdate') = 'disable'
+		RETURN; 
 	
 	-- pokud u firmy neexistuje osoba "PREB", vytvorit kopii osobu 
 	INSERT INTO Adresar_Osoba (

@@ -3,6 +3,9 @@ ON Objednavky_PolozkaObjednavkyVydane
 AFTER INSERT, UPDATE
 AS
 BEGIN
+	IF SESSION_CONTEXT(N'USER_Objednavky_PolozkaObjednavkyVydane_AfterInsertUpdate') = 'disable'
+		RETURN; 
+
 	DECLARE @Polozky AS USER_PolozkaDokladu;
 	DECLARE @MnozstviVJednotkach NVARCHAR(MAX);
 	DECLARE @Cursor_ID UNIQUEIDENTIFIER;

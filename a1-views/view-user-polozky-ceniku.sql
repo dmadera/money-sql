@@ -29,7 +29,8 @@ SELECT
 	END, 2) AS BudouciCena,
 	(CASE
 		WHEN Cenik.Kod = '_PRODEJ' THEN 0
-		WHEN Cenik.Kod = '_NAKUP'  THEN 0
+		WHEN Cenik.Kod = '_NAKUP'  THEN 1
+		WHEN Cenik.Kod = '_AKCE'  THEN 1
 		ELSE 1
 	END) AS NepodlehaSleveDokladu,
 	StavZas.ZustatekMnozstvi AS ZustatekMnozstvi,

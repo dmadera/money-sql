@@ -3,6 +3,9 @@ ON SkladovyDoklad_PolozkaDodacihoListuVydaneho
 AFTER INSERT, UPDATE
 AS
 BEGIN
+	IF SESSION_CONTEXT(N'USER_SkladovyDoklad_PolozkaDodacihoListuVydaneho_AfterInsertUpdate') = 'disable'
+		RETURN; 
+
 	/* 
 		MnozstviPozn_UserData:
 		* posledni kus
@@ -12,11 +15,10 @@ BEGIN
 		MnozstviPozn_UserData = (CASE
 			WHEN P.ZustatekMnozstvi = 0 THEN '*'
 			WHEN P.ZustatekMnozstvi < 0 THEN '-'
-			ELSE ''
+			ELSE '+'
 		END),
 		Marze_UserData = IIF(P.SkladovaCena = 0 OR Pol.JednCena = 0, 0, ROUND(100/P.SkladovaCena*(Pol.JednCena-P.SkladovaCena), 2)),
-		NakupniCena_UserData = P.SkladovaCena,
-		RPDP_UserData = P.RPDP
+		NakupniCena_UserData = P.SkladovaCena
 	FROM SkladovyDoklad_PolozkaDodacihoListuVydaneho AS Pol
 	INNER JOIN inserted ON inserted.ID = Pol.ID
 	INNER JOIN Obchod_ObsahPolozkySArtiklem AS Obsah ON Obsah.ID = Pol.ObsahPolozky_ID

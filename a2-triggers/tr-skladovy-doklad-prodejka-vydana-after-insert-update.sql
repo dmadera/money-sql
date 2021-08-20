@@ -4,6 +4,9 @@ AFTER INSERT, UPDATE
 AS
 BEGIN
 
+	IF SESSION_CONTEXT(N'USER_SkladovyDoklad_ProdejkaVydana_AfterInsertUpdate') = 'disable'
+		RETURN; 
+
 	INSERT INTO Ucetnictvi_InterniDoklad (
             Group_ID, Locked, Deleted, Faze,
             CleneniDPH_ID, DomaciMena_ID, Predkontace_ID, PredkontaceZaokrouhleni_ID, RegistraceDPH_ID, 

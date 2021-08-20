@@ -3,6 +3,10 @@ ON Ucetnictvi_InterniDoklad
 AFTER UPDATE
 AS
 BEGIN
+
+	IF SESSION_CONTEXT(N'USER_Ucetnictvi_InterniDoklad_AfterInsert') = 'disable'
+		RETURN; 
+
 	UPDATE Ucetnictvi_InterniDoklad SET 
 		Nazev = CASE
 			WHEN ID.CisloDokladu =  '_SK000000'

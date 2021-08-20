@@ -1,20 +1,5 @@
 #!/bin/bash
 
-for dir in $(find . -type d -name 'd-*')
-do
-    fname="$dir.sql"
-    echo "Writting $fname"
-    echo "" > $fname
-    for f in $(find $dir -type f -name '*.sql' | sort)
-    do
-        echo "PRINT 'Processing file $f.';" >> $fname
-        echo "GO" >> $fname
-        f=${f/./C:\\Money\\MoneySql}
-        echo ":r ${f//\//\\}" >> $fname
-        echo "GO" >> $fname
-    done
-done
-
 fname="./a-drop-create-all.sql"
 echo "" > $fname
 echo "Writting $fname"

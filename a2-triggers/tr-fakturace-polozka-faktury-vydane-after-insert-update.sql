@@ -3,6 +3,9 @@ ON Fakturace_PolozkaFakturyVydane
 AFTER INSERT, UPDATE
 AS
 BEGIN
+	IF SESSION_CONTEXT(N'USER_Fakturace_PolozkaFakturyVydane_AfterInsertUpdate') = 'disable'
+		RETURN; 
+
 	/* marze, nakupni cena do polozky */
 	UPDATE Fakturace_PolozkaFakturyVydane SET
 		Marze_UserData = IIF(Cena.JednotkovaSkladovaCena = 0 OR Pol.JednCena = 0, 0, ROUND(100/Cena.JednotkovaSkladovaCena*(Pol.JednCena-Cena.JednotkovaSkladovaCena), 2)),

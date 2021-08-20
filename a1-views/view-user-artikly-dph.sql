@@ -3,13 +3,8 @@ GO
 
 CREATE VIEW dbo.USER_ArtiklyDph AS
 SELECT DISTINCT 
-	ArtSazby.Parent_ID AS ID, Sazba.Sazba 
-FROM Artikly_PlatneSazbyDPHView as ArtSazby
-INNER join (
-	SELECT DruhSazby, MAX(PlatnostOd) AS PlatnostOd
-	FROM EconomicBase_SazbaDPH
-	WHERE GETDATE() BETWEEN PlatnostOd AND PlatnostDo
-	GROUP BY DruhSazby
-) AS PlatnaSazba ON PlatnaSazba.DruhSazby = ArtSazby.SazbaVystup
-INNER JOIN EconomicBase_SazbaDPH AS Sazba ON 
-	(Sazba.DruhSazby = PlatnaSazba.DruhSazby AND Sazba.PlatnostOd = PlatnaSazba.PlatnostOd)
+	P.Parent_ID AS ID, S.Sazba 
+FROM Artikly_PlatneSazbyDPHView P
+INNER JOIN EconomicBase_SazbaDPH S ON S.DruhSazby = P.SazbaVystup 
+	AND ((P.PovahaSazbyVystup_ID IS NULL AND S.PovahaSazbyDPH_ID IS NULL) OR (P.PovahaSazbyVystup_ID = S.PovahaSazbyDPH_ID))
+WHERE GETDATE() BETWEEN PlatnostOd AND PlatnostDo

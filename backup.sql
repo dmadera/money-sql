@@ -1,0 +1,7 @@
+BACKUP DATABASE S4_Agenda_PEMA
+TO DISK = '\\DBSERVER\Backup\S4_Agenda_PEMA.bak'
+GO
+
+BACKUP DATABASE S4_System
+TO DISK = '\\DBSERVER\Backup\S4_System.bak'
+GO
