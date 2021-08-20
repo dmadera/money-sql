@@ -12,12 +12,14 @@ FROM (
 		MAX(Pohyb.Create_Date) AS Datum
 	FROM Sklady_PohybZasoby AS Pohyb WITH (NOLOCK)
 	WHERE 
-		DokladObjectName = 'DodaciListPrijaty'
+		DokladObjectName = 'DodaciListPrijaty' 
+		AND Deleted = 0
 	GROUP BY Pohyb.Konto_ID
 ) AS SubPohyb
 INNER JOIN (
 	SELECT Konto_ID, CisloDokladu, Create_Date AS Datum, DokladObjectName
 	FROM Sklady_PohybZasoby AS Pohyb WITH (NOLOCK)
+	WHERE Deleted = 0
 ) AS Pohyb ON
 	Pohyb.Konto_ID = SubPohyb.Konto_ID
 	AND Pohyb.Datum = SubPohyb.Datum
