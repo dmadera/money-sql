@@ -1,5 +1,5 @@
 DECLARE @SearchStr nvarchar(100)
-SET @SearchStr = 'KreditFa_UserData'
+SET @SearchStr = 'font'
  
  
 -- Copyright © 2002 Narayana Vyas Kondreddi. All rights reserved.

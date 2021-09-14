@@ -10,6 +10,8 @@ BEGIN
 	UPDATE Artikly_Artikl SET 
 		BaleniJednotky_UserData = ISNULL(ArtBal.Jednotky, ''),
 		BaleniMnozstvi_UserData = ISNULL(ArtBal.Mnozstvi, ''),
+		BaleniJednotkyKart_UserData = ISNULL(ArtBalKar.Jednotky, ''),
+		BaleniMnozstviKart_UserData = ISNULL(ArtBalKar.Mnozstvi, ''),
 		KategorieRetezec_UserData = ISNULL(ArtKat.KategorieRetezec, ''),
 		Kategorie = ISNULL(ArtKat.Kategorie, ''),
 		NepodlehatSleveDokladu = IIF(ArtDruh.Kod = 'OBA', 1, inserted.NepodlehatSleveDokladu)
@@ -17,6 +19,7 @@ BEGIN
 	INNER JOIN inserted ON inserted.ID = Art.ID
 	INNER JOIN Ciselniky_DruhArtiklu AS ArtDruh ON ArtDruh.ID = Art.DruhArtiklu_ID
 	LEFT JOIN USER_ArtiklyBaleni AS ArtBal ON ArtBal.Artikl_ID = Art.ID
+	LEFT JOIN USER_ArtiklyBaleniKarton AS ArtBalKar ON ArtBalKar.Artikl_ID = Art.ID
 	LEFT JOIN USER_ArtiklyKategorie AS ArtKat ON ArtKat.Artikl_ID = Art.ID;
 
 	UPDATE Artikly_Artikl SET

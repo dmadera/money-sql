@@ -9,6 +9,7 @@ DECLARE @Grey INT = -8355712;
 DECLARE @Blue INT = -16748352;
 DECLARE @Green INT = -16738048;
 DECLARE @GreenDark INT = -16751104;
+DECLARE @Black INT = 0;
 
 SET @Name = 'Zasoba je objednana';
 IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
@@ -150,10 +151,27 @@ IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
 		WHERE T.TableName = 'Adresar_Firma' AND O.ObjectName = 'ObjednavkaPrijata';
 
 UPDATE MetaData_GridColors SET
-	Condition = '(KreditFa_UserData LIKE ''FA%'' )',
+	Condition = '([KreditFa_UserData] LIKE ''FA%'' )',
 	Priority = 50,
 	BackColor = -1, 
 	FontColor = @GreenDark, 
+	FontStyle = 0
+	WHERE Name = @Name;
+
+SET @Name = 'Firma nema povoleno na FA';
+IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
+	INSERT INTO MetaData_GridColors 
+		(Object_ID, Name, IsUser, IsGenerated)
+		SELECT TOP 1 O.ID, @Name, 1, 0 
+		FROM MetaData_GridTables AS T 
+		INNER JOIN MetaData_Objects AS O ON O.ID = T.Object_ID 
+		WHERE T.TableName = 'Adresar_Firma' AND O.ObjectName = 'ObjednavkaPrijata';
+
+UPDATE MetaData_GridColors SET
+	Condition = '([KreditFa_UserData] = '''' OR [ZpusobPlatbyESHOP_UserData] = ''Hotovì'')',
+	Priority = 50,
+	BackColor = -1, 
+	FontColor = @Black, 
 	FontStyle = 0
 	WHERE Name = @Name;
 
@@ -167,7 +185,7 @@ IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
 		WHERE T.TableName = 'Adresar_Firma' AND O.ObjectName = 'Firma';
 
 UPDATE MetaData_GridColors SET
-	Condition = '(KreditFa_UserData LIKE ''FA%'' )',
+	Condition = '([KreditFa_UserData] LIKE ''FA%'' )',
 	Priority = 50,
 	BackColor = -1, 
 	FontColor = @GreenDark, 
@@ -180,6 +198,7 @@ FROM MetaData_GridColors C
 INNER JOIN MetaData_Objects AS O ON O.ID = C.Object_ID 
 WHERE O.ObjectName = 'ObjednavkaPrijata' AND (C.Name = 'Vyøízená objednávka');
 
+/*
 DELETE FROM MetaData_GridColors WHERE ID IN (
 	SELECT C.ID 
 	FROM MetaData_GridColors C
@@ -189,3 +208,4 @@ DELETE FROM MetaData_GridColors WHERE ID IN (
 		OR C.Name = 'Nevyøízená objednávka mimo platnost'
 	)
 );
+*/

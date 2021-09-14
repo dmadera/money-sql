@@ -3,6 +3,10 @@ EXECUTE USER_System_Filter
 	'Firma', 'Výše slevy', 'Firma', NULL, 'AdFi.HodnotaSlevy {0}', 1;
 EXECUTE USER_System_Filter
 	'Firma', 'Vlastní sleva', 'Firma', NULL, 'AdFi.VlastniSleva {0}', 3;
+EXECUTE USER_System_Filter
+	'Firma', 'Typ spojení', 'Firma', 'TypSpojeni',
+	'AdFi.ID IN (SELECT [Root_ID] FROM [\ACTUALAGENDA]..[Adresar_Spojeni] WITH(NOLOCK) WHERE ([TypSpojeni_ID] {0}))',
+	5;
 
 -- FakturaVydana
 EXECUTE USER_System_Filter

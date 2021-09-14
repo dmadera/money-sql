@@ -28,7 +28,9 @@ UPDATE MetaData_GridColumns SET
 FROM MetaData_GridColumns
 WHERE 
 	ColumnName LIKE '%balenimnozstvi_userdata%' 
-	OR ColumnName LIKE '%balenijednotky_userdata%' 
+	OR ColumnName LIKE '%balenijednotky_userdata%'
+	OR ColumnName LIKE '%balenimnozstvikart_userdata%' 
+	OR ColumnName LIKE '%balenijednotkykart_userdata%' 
 	OR ColumnName LIKE '%sazbadph_userdata%'
 	OR ColumnName LIKE '%prodej20avg_userdata%'
 	OR ColumnName LIKE '%prodej20med_userdata%';
