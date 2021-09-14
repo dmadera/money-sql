@@ -11,6 +11,8 @@ GO
 GO
 PRINT 'Creating objects from dir ./a1-views.';
 GO
+:r C:\Money\MoneySql\a1-views\view-user-artikly-baleni-karton.sql
+GO
 :r C:\Money\MoneySql\a1-views\view-user-artikly-baleni.sql
 GO
 :r C:\Money\MoneySql\a1-views\view-user-artikly-dph.sql
@@ -34,10 +36,6 @@ GO
 PRINT 'Creating objects from dir ./a2-procedures.';
 GO
 :r C:\Money\MoneySql\a2-procedures\proc-user-katalog-jednotky.sql
-GO
-:r C:\Money\MoneySql\a2-procedures\proc-user-mnozstvi-artiklu-v-jednotkach.sql
-GO
-:r C:\Money\MoneySql\a2-procedures\proc-user-polozky-mnozstvi-v-jednotkach.sql
 GO
 :r C:\Money\MoneySql\a2-procedures\proc-user-system-filter.sql
 GO
@@ -68,8 +66,6 @@ GO
 :r C:\Money\MoneySql\a2-triggers\tr-objednavky-polozka-nabidky-vydane-after-insert-update.sql
 GO
 :r C:\Money\MoneySql\a2-triggers\tr-objednavky-polozka-objednavky-prijate-after-insert-update.sql
-GO
-:r C:\Money\MoneySql\a2-triggers\tr-objednavky-polozka-objednavky-vydane-after-insert-update.sql
 GO
 :r C:\Money\MoneySql\a2-triggers\tr-skladovy-doklad-dodaci-list-vydany-after-insert-update.sql
 GO
