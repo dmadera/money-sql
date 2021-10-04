@@ -22,8 +22,8 @@ BEGIN
 			)
 	FROM Objednavky_PolozkaObjednavkyPrijate AS Pol
 	INNER JOIN inserted ON inserted.ID = Pol.ID
-	INNER JOIN Obchod_ObsahPolozkySArtiklem AS Obsah ON Obsah.ID = Pol.ObsahPolozky_ID
-	INNER JOIN USER_ArtiklyJednotky J ON J.Artikl_ID = Obsah.Artikl_ID
-	INNER JOIN CSW_BI_StavSkladuVCenach AS Cena ON Cena.Artikl_ID = Obsah.Artikl_ID
+	INNER JOIN Obchod_ObsahPolozkySArtiklem AS Obsah WITH(NOLOCK) ON Obsah.ID = Pol.ObsahPolozky_ID
+	INNER JOIN USER_ArtiklyJednotky J WITH(NOLOCK) ON J.Artikl_ID = Obsah.Artikl_ID
+	INNER JOIN CSW_BI_StavSkladuVCenach AS Cena WITH(NOLOCK) ON Cena.Artikl_ID = Obsah.Artikl_ID
 
 END
