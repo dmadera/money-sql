@@ -84,11 +84,10 @@ BEGIN
 			WHEN Firma.PouzivatKredit = 0 THEN 'FA'
 			WHEN Firma.PouzivatKredit = 1 AND Firma.HodnotaKreditu = 0 THEN '' 
 			WHEN Firma.PouzivatKredit = 1 AND Firma.HodnotaKreditu > 0 THEN CONCAT('FA ', FORMAT(Firma.HodnotaKreditu / 1000, '#')) END,
-		ProvNazev = IIF(Firma.OdlisnaAdresaProvozovny = 0, '', Firma.ProvNazev),
-		ProvUlice = IIF(Firma.OdlisnaAdresaProvozovny = 0, '', Firma.ProvUlice),
-		ProvMisto = IIF(Firma.OdlisnaAdresaProvozovny = 0, '', Firma.ProvMisto),
-		ProvPsc = IIF(Firma.OdlisnaAdresaProvozovny = 0, '', Firma.ProvPsc),
-		ProvPsc_ID = IIF(Firma.OdlisnaAdresaProvozovny = 0, NULL, Firma.ProvPsc_ID),
+		Provozovna_UserData = IIF(Firma.OdlisnaAdresaProvozovny = 1, 
+			Firma.ProvNazev 
+			+ IIF(Firma.ProvNazev <> '' AND Firma.ProvMisto <> '', ', ', '') + Firma.ProvMisto 
+			+ IIF((Firma.ProvNazev <> '' OR Firma.ProvMisto <> '') AND Firma.ProvUlice <> '', ', ', '') + Firma.ProvUlice, ''),
 		DatumPorizeni_UserData = IIF(Firma.DatumPorizeni_UserData = '1753-01-01 00:00:00.000', GETDATE(), Firma.DatumPorizeni_UserData) 
 	FROM Adresar_Firma AS Firma
 	INNER JOIN inserted ON inserted.ID = Firma.ID

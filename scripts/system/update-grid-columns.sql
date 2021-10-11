@@ -6,13 +6,19 @@ EXECUTE USER_System_Grid_Column
 EXECUTE USER_System_Grid_Column 
 	'DodaciListVydany', 'Adresar_Firma', 'AdFi.KreditFa_UserData', 'KreditFa_UserData', 'Kredit FA', 0;
 EXECUTE USER_System_Grid_Column 
-	'DodaciListVydany', 'Adresar_Firma', 'AdFi.EvidovatNahradniPlneni', 'EvidovatNahradniPlneni', 'NP', 2;
+	'DodaciListVydany', 'Adresar_Firma', 'AdFi.NahradniPlneni_UserData', 'NahradniPlneni_UserData', 'Odbìratel NP', 0;
 
 -- PolozkaObjednavkyPrijate
 EXECUTE USER_System_Grid_Column 
 	'PolozkaObjednavkyPrijate', 'Artikly_Artikl', 'ArAr.BaleniMnozstvi_UserData', 'BaleniMnozstvi_UserData', 'Balení množství', 0;
 EXECUTE USER_System_Grid_Column 
 	'PolozkaObjednavkyPrijate', 'Artikly_Artikl', 'ArAr.BaleniJednotky_UserData', 'BaleniJednotky_UserData', 'Balení jednotky', 0;
+
+-- PolozkaObjednavkyPrijate
+EXECUTE USER_System_Grid_Column 
+	'PolozkaObjednavkyVydane', 'Artikly_Artikl', 'ArAr.BaleniMnozstvi_UserData', 'BaleniMnozstvi_UserData', 'Balení množství', 0;
+EXECUTE USER_System_Grid_Column 
+	'PolozkaObjednavkyVydane', 'Artikly_Artikl', 'ArAr.BaleniJednotky_UserData', 'BaleniJednotky_UserData', 'Balení jednotky', 0;
 
 -- PolozkaDodacihoListuVydanehoMetadataTemplate
 EXECUTE USER_System_Grid_Column 

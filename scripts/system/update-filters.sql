@@ -24,6 +24,9 @@ EXECUTE USER_System_Filter
 EXECUTE USER_System_Filter
 	'DodaciListVydany', 'Odbìratel - Existuje telefon', 'Adresa', '',
 	'NOT (AdFi.EmailSpojeni_ID IS NULL)', 3;
+EXECUTE USER_System_Filter
+	'DodaciListVydany', 'Odbìratel - Náhradní plnìní', 'Adresa', '',
+	'AdFi.NahradniPlneni_UserData {0}', 2;
 
 
 -- PolozkaCeniku
