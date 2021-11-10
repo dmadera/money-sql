@@ -1,3 +1,6 @@
+USE S4_System
+GO
+
 CREATE OR ALTER PROCEDURE USER_System_Filter 
 	@ObjectName varchar(50),
 	@FilterCaption varchar(100),

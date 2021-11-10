@@ -11,6 +11,7 @@ BEGIN
 
 	UPDATE Ceniky_PolozkaCeniku SET
 		Marze_UserData = PolCen.Marze,
+		MarzePosledniNakup_UserData = PolCen.MarzePosledniNakup,
 		Cena = PolCen.Cena,
 		BudouciCena = IIF(PolCen.Marze <> Cena.Marze_UserData, PolCen.BudouciCena, 0),
 		Cena25_UserData = PolCen.Cena25,

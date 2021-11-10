@@ -8,3 +8,7 @@ ALTER TABLE Obchod_ObsahPolozkySArtiklem  WITH NOCHECK
 	ON DELETE SET NULL;
 ALTER TABLE Obchod_ObsahPolozkySArtiklem 
 	CHECK CONSTRAINT FK_Obchod_ObsahPolozkySArtiklem_Artikly_ArtiklJednotka_Jednotka_ID;
+
+-- smaze nepouzivane typy spojeni
+DELETE FROM Adresar_TypSpojeni
+where Nazev NOT LIKE '@%' AND Nazev NOT LIKE '#%';

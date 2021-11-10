@@ -1,3 +1,6 @@
+USE S4_System
+GO
+
 CREATE OR ALTER PROCEDURE USER_System_Grid_Column 
 	@ObjectName varchar(50),
 	@TableName varchar(50),

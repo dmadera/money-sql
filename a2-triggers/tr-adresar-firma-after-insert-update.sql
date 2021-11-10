@@ -21,7 +21,7 @@ BEGIN
 		TelefonSpojeni4_ID, FunkceOsoby_ID, OsloveniProEmail, DatumNarozeni, System_Komentar, System_Priznak, TitulPred_ID, TitulZa_ID		
 	)
 	SELECT 
-		Firma.ID, Firma.ID, Osoba.Group_ID, Osoba.Deleted, Osoba.Locked, ISNULL(Firma.Modify_ID, Firma.Create_ID), GETDATE(), Firma.Modify_ID, Firma.Modify_Date, Osoba.Kod, Osoba.Poznamka, 
+		Firma.ID, Firma.ID, Osoba.Group_ID, Osoba.Deleted, Osoba.Locked, ISNULL(Firma.Modify_ID, Firma.Create_ID), GETDATE(), Firma.Modify_ID, Firma.Modify_Date, CONCAT(Firma.Kod, 'PRE'), Osoba.Poznamka, 
 		Osoba.Jmeno, Osoba.Prijmeni, Osoba.TitulPred, Osoba.TitulZa, Osoba.Pohlavi, Osoba.Funkce, Osoba.AdresaMisto, Osoba.AdresaNazev, Osoba.AdresaPsc, Osoba.AdresaStat, Osoba.AdresaUlice, 
 		Osoba.CisloOsoby, Osoba.CisloS3, Osoba.DatumPosty, Osoba.Email, Osoba.KrestniJmeno, Osoba.Nazev, Osoba.Osloveni, Osoba.PosilatPostu, Osoba.Spojeni, 
 		Osoba.Tel1Cislo, Osoba.Tel1Klapka, Osoba.Tel1MistniCislo, Osoba.Tel1Predvolba, Osoba.Tel1Typ, 
@@ -34,13 +34,12 @@ BEGIN
 		Osoba.TelefonSpojeni4_ID, Osoba.FunkceOsoby_ID, Osoba.OsloveniProEmail, Osoba.DatumNarozeni, Osoba.System_Komentar, Osoba.System_Priznak, Osoba.TitulPred_ID, Osoba.TitulZa_ID
 	FROM inserted AS Firma
 	LEFT JOIN ( 
-		SELECT DISTINCT Firma.ID AS ID
-		FROM inserted AS Firma
-		INNER JOIN Adresar_Osoba AS Osoba ON Osoba.Parent_ID = Firma.ID
+		SELECT Osoba.Parent_ID AS Firma_ID
+		FROM Adresar_Osoba AS Osoba WITH (NOLOCK)
 		WHERE Osoba.FunkceOsoby_ID = (SELECT TOP 1 ID FROM Adresar_FunkceOsoby AS Funkce WHERE Funkce.Code = 'PRE')
-	) AS NotFirma ON NotFirma.ID = Firma.ID
-	INNER JOIN Adresar_Osoba AS Osoba ON Osoba.Kod = 'AD00001PRE'
-	WHERE NotFirma.ID IS NULL AND Osoba.ID IS NOT NULL;
+	) AS NotFirma ON NotFirma.Firma_ID = Firma.ID
+	INNER JOIN Adresar_Osoba AS Osoba WITH (NOLOCK) ON Osoba.Kod = 'AD00001PRE'
+	WHERE NotFirma.Firma_ID IS NULL AND Osoba.ID IS NOT NULL;
 
 	-- aktualizuje data prebirajici osoby
 	UPDATE Adresar_Osoba SET
@@ -55,22 +54,28 @@ BEGIN
 	INNER JOIN inserted ON inserted.ID = Firma.ID
 	LEFT JOIN (
 		SELECT Spojeni.ID, Spojeni.Parent_ID, Spojeni.Popis, Spojeni.SpojeniCislo
-		FROM Adresar_Spojeni AS Spojeni
-		INNER JOIN Adresar_TypSpojeni AS TypSpojeni ON TypSpojeni.ID = Spojeni.TypSpojeni_ID
+		FROM Adresar_Spojeni AS Spojeni WITH (NOLOCK)
+		INNER JOIN Adresar_TypSpojeni AS TypSpojeni WITH (NOLOCK) ON TypSpojeni.ID = Spojeni.TypSpojeni_ID
 		WHERE TypSpojeni.Kod = 'TelPreb'
 	) AS SpojeniPreb ON SpojeniPreb.Parent_ID = Firma.ID 
 	LEFT JOIN (
 		SELECT Spojeni.ID, Spojeni.Parent_ID, Spojeni.Popis, Spojeni.SpojeniCislo
-		FROM Adresar_Spojeni AS Spojeni
-		INNER JOIN Adresar_TypSpojeni AS TypSpojeni ON TypSpojeni.ID = Spojeni.TypSpojeni_ID
+		FROM Adresar_Spojeni AS Spojeni WITH (NOLOCK)
+		INNER JOIN Adresar_TypSpojeni AS TypSpojeni WITH (NOLOCK) ON TypSpojeni.ID = Spojeni.TypSpojeni_ID
 		INNER JOIN (
 			SELECT Spojeni.Parent_ID, MIN(LEN(TypSpojeni.Kod)) AS LenTypSpoj
-			FROM Adresar_Spojeni AS Spojeni
-			INNER JOIN Adresar_TypSpojeni AS TypSpojeni ON TypSpojeni.ID = Spojeni.TypSpojeni_ID
+			FROM Adresar_Spojeni AS Spojeni WITH (NOLOCK)
+			INNER JOIN Adresar_TypSpojeni AS TypSpojeni WITH (NOLOCK) ON TypSpojeni.ID = Spojeni.TypSpojeni_ID
 			WHERE TypSpojeni.Kod LIKE 'Tel%' AND Spojeni.Popis != ''
 			GROUP BY Spojeni.Parent_ID
 		) AS SQ ON SQ.Parent_ID = Spojeni.Parent_ID AND TypSpojeni.Kod LIKE 'Tel%' AND Spojeni.Popis != '' AND LEN(TypSpojeni.Kod) = SQ.LenTypSpoj
 	) AS SpojeniTel ON SpojeniTel.Parent_ID = Firma.ID;
+
+	-- aktualizuje nazevFirmy v dodavatelske tabulce
+	UPDATE Artikly_ArtiklDodavatel SET
+		NazevFirmy = F.Nazev
+	FROM Artikly_ArtiklDodavatel AD WITH (NOLOCK)
+	INNER JOIN inserted F ON F.ID = AD.Firma_ID;
 
 	UPDATE Adresar_Firma SET 
 		Doprava_UserData = ISNULL(Doprava.Nazev, ''),
@@ -91,19 +96,19 @@ BEGIN
 		DatumPorizeni_UserData = IIF(Firma.DatumPorizeni_UserData = '1753-01-01 00:00:00.000', GETDATE(), Firma.DatumPorizeni_UserData) 
 	FROM Adresar_Firma AS Firma
 	INNER JOIN inserted ON inserted.ID = Firma.ID
-	LEFT JOIN Ciselniky_ZpusobDopravy AS Doprava ON Doprava.ID = Firma.ZpusobDopravy_ID
-	LEFT JOIN Ciselniky_ZpusobPlatby AS Platba ON Platba.ID = Firma.ZpusobPlatby_ID
+	LEFT JOIN Ciselniky_ZpusobDopravy AS Doprava WITH (NOLOCK) ON Doprava.ID = Firma.ZpusobDopravy_ID
+	LEFT JOIN Ciselniky_ZpusobPlatby AS Platba WITH (NOLOCK) ON Platba.ID = Firma.ZpusobPlatby_ID
 	LEFT JOIN (
 		SELECT FirAdrKlic.Parent_ID, Kod
 		FROM Adresar_FirmaAdresniKlic AS FirAdrKlic
-		INNER JOIN Adresar_AdresniKlic AS AdrKlic ON AdrKlic.ID = FirAdrKlic.AdresniKlic_ID
+		INNER JOIN Adresar_AdresniKlic AS AdrKlic WITH (NOLOCK) ON AdrKlic.ID = FirAdrKlic.AdresniKlic_ID
 		WHERE AdrKlic.Kod = '-SEK'
 	) AS FirAdrKlic ON FirAdrKlic.Parent_ID = Firma.ID
 	LEFT JOIN (
 		SELECT FirCinnost.Parent_ID, Cinnost.Kod AS Kod, MIN(FirCinnost.Poradi) AS Poradi
-		FROM Adresar_FirmaCinnost AS FirCinnost
-		INNER JOIN Ciselniky_Cinnost AS Cinnost ON Cinnost.ID = FirCinnost.Cinnost_ID
+		FROM Adresar_FirmaCinnost AS FirCinnost WITH (NOLOCK)
+		INNER JOIN Ciselniky_Cinnost AS Cinnost WITH (NOLOCK) ON Cinnost.ID = FirCinnost.Cinnost_ID
 		GROUP BY FirCinnost.Parent_ID, Cinnost.Kod
 	) AS FirCinnost ON FirCinnost.Parent_ID = Firma.ID
-	LEFT JOIN Adresar_Osoba AS Osoba ON Osoba.Parent_ID = Firma.ID AND Osoba.FunkceOsoby_ID = (SELECT TOP 1 ID FROM Adresar_FunkceOsoby AS Funkce WHERE Funkce.Code = 'PRE');
+	LEFT JOIN Adresar_Osoba AS Osoba WITH (NOLOCK) ON Osoba.Parent_ID = Firma.ID AND Osoba.FunkceOsoby_ID = (SELECT TOP 1 ID FROM Adresar_FunkceOsoby AS Funkce WHERE Funkce.Code = 'PRE');
 END

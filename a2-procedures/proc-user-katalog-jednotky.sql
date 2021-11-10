@@ -5,7 +5,7 @@ SET Context_Info 0x55554;
 -- jednotky 
 -- nastavi prodejni jednotku prvni pod hlavni, pokud je kartonova (Ciselniky_Jednotka.KartonovaJednotka_UserData = 1)
 -- nastavi nakupni jednotku prvni pod hlavni
-UPDATE Artikly_Artikl SET
+/*UPDATE Artikly_Artikl SET
 	ProdejniJednotka_ID = ISNULL(ArtJedPrvniKarton.ID, Artikl.HlavniJednotka_ID),
 	NakupniJednotka_ID = ISNULL(ArtJedPrvni.ID, Artikl.HlavniJednotka_ID)
 FROM Artikly_Artikl AS Artikl
@@ -34,7 +34,7 @@ LEFT JOIN Artikly_ArtiklJednotka AS ArtJedPrvni ON
 	ArtJedPrvni.Parent_ID = ArtJedPrvniSub.Parent_ID 
 	AND ArtJedPrvni.VychoziMnozstvi = ArtJedPrvniSub.VychoziMnozstvi
 WHERE Artikl.Deleted = 0
-
+*/
 -- jednotky - u dodavatele nastavi prodejni jednotku
 UPDATE Artikly_ArtiklDodavatel SET
 	Jednotka_ID = ArtJed.Jednotka_ID,

@@ -1,3 +1,6 @@
+USE S4_System
+GO
+
 CREATE OR ALTER PROCEDURE USER_System_Grid_Table
 	@ObjectName varchar(50),
 	@TableName varchar(100),
@@ -6,6 +9,7 @@ CREATE OR ALTER PROCEDURE USER_System_Grid_Table
 	@KeyColumnForeign varchar(100),
 	@KeyCustomRelation varchar(MAX) = NULL,
 	@RelationType int = 1,
+	@TableLocation int = 1,
 	@Priority int = 100
 AS BEGIN
 
@@ -28,7 +32,7 @@ AS BEGIN
 		KeyCustomRelation, Module_ID)
 	SELECT
 		@ObjectID, @TableName, @TableAlias,
-		1, @KeyColumn, @KeyColumnForeign,
+		@TableLocation, @KeyColumn, @KeyColumnForeign,
 		@RelationType, @Priority, 1, 1,
 		@KeyCustomRelation, NULL;
 

@@ -31,10 +31,12 @@ BEGIN
 		StitekSazba_UserData = ISNULL(Sazba.Sazba, 0),
 		StitekTisk_UserData = 1
 	FROM inserted
-	INNER JOIN USER_ArtiklyStitek AS ArtStitek ON inserted.ID = ArtStitek.ID
-	INNER JOIN Artikly_Artikl AS Art ON Art.ID = ArtStitek.ID
+	INNER JOIN Artikly_Artikl AS Art ON Art.ID = inserted.ID
+	INNER JOIN USER_ArtiklyStitek AS ArtStitek ON Art.ID = ArtStitek.ID
+	INNER JOIN Ciselniky_DruhArtiklu AS Druh ON Druh.ID = Art.DruhArtiklu_ID
 	LEFT JOIN USER_ARtiklyDph AS Sazba ON Sazba.ID = Art.ID
 	WHERE 
+		Druh.Kod = 'ZBO' AND 
 		Art.StitekTisk_UserData = 0 AND (
 			Art.StitekNazev_UserData != ArtStitek.Nazev
 			OR Art.StitekBaleni_UserData != ArtStitek.BaleniMnozstvi

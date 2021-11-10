@@ -17,6 +17,10 @@ SELECT
 		ELSE 100 / StavZas.ZustatekJednotkaCena * (Cena.Cena - StavZas.ZustatekJednotkaCena) 
 	END, 2) AS Marze,
 	ROUND(CASE
+		WHEN ISNULL(PoslPrijem.NakupniCena, 0) = 0 THEN 0
+		ELSE 100 / ISNULL(PoslPrijem.NakupniCena, 0)  * (Cena.Cena - ISNULL(PoslPrijem.NakupniCena, 0) ) 
+	END, 2) AS MarzePosledniNakup,
+	ROUND(CASE
 		WHEN Cenik.Kod = '_NAKUP' THEN StavZas.ZustatekJednotkaCena
 		ELSE Cena.Cena
 	END, 2) AS Cena,
@@ -24,7 +28,7 @@ SELECT
 		WHEN 
 			Cenik.Kod = '_PRODEJ' 
 			AND StavZas.PocatekJednotkaCena <> StavZas.ZustatekJednotkaCena
-			THEN Artikl.PosledniCena * (1 + Cena.MarzeP_UserData / 100) 
+			THEN ISNULL(PoslPrijem.NakupniCena, 0)  * (1 + Cena.MarzeP_UserData / 100) 
 		ELSE 0 
 	END, 2) AS BudouciCena,
 	(CASE
@@ -33,11 +37,10 @@ SELECT
 		WHEN Cenik.Kod = '_AKCE'  THEN 1
 		ELSE 1
 	END) AS NepodlehaSleveDokladu,
-	StavZas.ZustatekMnozstvi AS ZustatekMnozstvi,
-	IIF(Artikl.PreneseniDane_ID IS NULL, '', 'RPDP') AS RPDP
+	StavZas.ZustatekMnozstvi AS ZustatekMnozstvi
 FROM dbo.Sklady_Zasoba AS Zasoba WITH (NOLOCK)
 INNER JOIN dbo.Ceniky_PolozkaCeniku AS Cena (NOLOCK) ON Cena.Artikl_ID = Zasoba.Artikl_ID
 INNER JOIN dbo.Ceniky_Cenik AS Cenik WITH (NOLOCK) ON Cenik.ID = Cena.Cenik_ID
-INNER JOIN dbo.Artikly_Artikl AS Artikl WITH (NOLOCK) ON Artikl.ID = Cena.Artikl_ID
+LEFT JOIN USER_PosledniPrijemZasoby PoslPrijem WITH(NOLOCK) ON PoslPrijem.Zasoba_ID = Zasoba.ID
 INNER JOIN dbo.Sklady_StavZasoby AS StavZas WITH (NOLOCK) ON StavZas.ID = Zasoba.AktualniStav_ID
 WHERE (Zasoba.Deleted = 0) AND (Cena.Deleted = 0 OR Cena.Deleted IS NULL);

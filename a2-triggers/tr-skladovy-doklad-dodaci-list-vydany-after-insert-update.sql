@@ -34,16 +34,16 @@ BEGIN
 			D.AdresaMisto, D.AdresaNazev, D.AdresaPSC, D.AdresaStat, D.AdresaUlice,
 			D.AdresaKontaktniOsobaJmeno, D.AdresaKontaktniOsobaNazev, D.AdresaKontaktniOsobaPrijmeni, 
 			D.Osoba_ID, D.Firma_ID, D.IC, D.Jmeno, D.DIC
-        FROM inserted as D
-        INNER JOIN Adresar_Firma AS Fir ON Fir.ID = D.Firma_ID
+        FROM inserted as D WITH (NOLOCK)
+        INNER JOIN Adresar_Firma AS Fir WITH (NOLOCK) ON Fir.ID = D.Firma_ID
 		LEFT JOIN (
 			SELECT FirAdrKl.ID AS ID, FirAdrKl.Parent_ID AS Parent_ID
-			FROM Adresar_FirmaAdresniKlic AS FirAdrKl
-			INNER JOIN Adresar_AdresniKlic AS AdrKlic ON AdrKlic.ID = FirAdrKl.AdresniKlic_ID
+			FROM Adresar_FirmaAdresniKlic AS FirAdrKl WITH (NOLOCK)
+			INNER JOIN Adresar_AdresniKlic AS AdrKlic WITH (NOLOCK) ON AdrKlic.ID = FirAdrKl.AdresniKlic_ID
 			WHERE AdrKlic.Kod = '-SEK'
 		) AS AdrKlicSek ON AdrKlicSek.Parent_ID = D.Firma_ID
-		LEFT JOIN Ucetnictvi_InterniDoklad AS IDa ON IDa.ParovaciSymbol = D.CisloDokladu
-        LEFT JOIN Ucetnictvi_InterniDoklad AS ID ON ID.CisloDokladu = '_SK000000'
+		LEFT JOIN Ucetnictvi_InterniDoklad AS IDa WITH (NOLOCK) ON IDa.ParovaciSymbol = D.CisloDokladu
+        LEFT JOIN Ucetnictvi_InterniDoklad AS ID WITH (NOLOCK) ON ID.CisloDokladu = '_SK000000'
         WHERE 
 			D.Storno = 0
 			AND AdrKlicSek.ID IS NULL
@@ -53,7 +53,7 @@ BEGIN
 
 	UPDATE Ucetnictvi_InterniDoklad SET
 		ID = ID.ID
-	FROM Ucetnictvi_InterniDoklad AS ID
+	FROM Ucetnictvi_InterniDoklad AS ID WITH (NOLOCK)
 	INNER JOIN inserted ON inserted.CisloDokladu = ID.ParovaciSymbol;
 
 END

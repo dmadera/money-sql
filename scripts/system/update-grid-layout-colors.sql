@@ -85,7 +85,7 @@ IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
 
 UPDATE MetaData_GridColors SET
 	Condition = '([BudouciCena] <> 0 AND [Marze_UserData] < [MarzeP_UserData])',
-	Priority = 10,
+	Priority = 20,
 	BackColor = -1, 
 	FontColor = @Bordo, 
 	FontStyle = 0

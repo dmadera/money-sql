@@ -1,3 +1,6 @@
+USE S4_System
+GO 
+
 -- ObjednavkaPrijata
 EXECUTE USER_System_Grid_Column 
 	'ObjednavkaPrijata', 'Adresar_Firma', 'AdFi.KreditFa_UserData', 'KreditFa_UserData', 'Kredit FA', 0;
@@ -78,3 +81,31 @@ EXECUTE USER_System_Grid_Table
 EXECUTE USER_System_Grid_Column 
 	'PolozkaCeniku', 'Ciselniky_DruhArtiklu', 'ArArCiDr.Nazev', 'DruhArtikluNazev', 'Druh položky katalogu', 0;
 
+-- ProdejkaVydana
+EXECUTE USER_System_Grid_Table
+	'ProdejkaVydana', 'EconomicBase_NavazujiciDoklad', 'EcNa', '', '', 'EcNa.DokladZdroj_ID = SkPrV.ID AND EcNa.DokladCilObjectName = ''PokladniDoklad''';
+EXECUTE USER_System_Grid_Column 
+	'ProdejkaVydana', 'EconomicBase_NavazujiciDoklad', 'EcNa.PopisCil', 'PopisCil', 'Navazující pokladní doklad', 0;
+EXECUTE USER_System_Grid_Column 
+	'ProdejkaVydana', 'Adresar_Firma', 'AdFi.Nazev', 'AdFiNazev', 'Firma zažadit jako', 0;
+
+-- PohybZasoby
+UPDATE MetaData_GridTables SET
+	TableName = 'USER_S5_Sklady_PohybZasobyPrehled'
+FROM MetaData_GridTables T
+INNER JOIN MetaData_Objects O ON O.ID = T.Object_ID
+WHERE (O.ObjectName = 'PohybZasobyPrehled' AND T.TableName = 'S5_Sklady_PohybZasobyPrehled');
+EXECUTE USER_System_Grid_Column 
+	'PohybZasobyPrehled', 'USER_S5_Sklady_PohybZasobyPrehled', 'SkPo.DatumVystaveni', 'DatumVystaveni', 'Datum vystavení', 0;
+EXECUTE USER_System_Grid_Table
+	'PohybZasobyPrehled', 'Adresar_Firma', 'AdFi', 'ID', 'SkPo.Firma_ID';
+EXECUTE USER_System_Grid_Column 
+	'PohybZasobyPrehled', 'Adresar_Firma', 'AdFi.Kod', 'AdFiKod', 'Firma kód', 0;
+EXECUTE USER_System_Grid_Column 
+	'PohybZasobyPrehled', 'Adresar_Firma', 'AdFi.Nazev', 'AdFiNazev', 'Firma zaøadit jako', 0;
+
+-- HistorickaCena
+EXECUTE USER_System_Grid_Table
+	'HistorickaCena', 'System_Users', 'SyUs', 'ID', 'CeHi.Create_ID', NULL, 1, 0;
+EXECUTE USER_System_Grid_Column 
+	'HistorickaCena', 'System_Users', 'SyUs.FullName', 'FullName', 'Uživatel', 0;

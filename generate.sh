@@ -5,7 +5,7 @@ echo "" > $fname
 echo "Writting $fname"
 
 f='./a-drop-all.sql'
-f=${f/./C:\\Money\\MoneySql}
+f=${f/./D:\\MoneyDev\\MoneySql}
 echo "PRINT 'Dropping all objects.';" >> $fname
 echo "GO" >> $fname
 echo ":r ${f//\//\\}" >> $fname
@@ -17,7 +17,7 @@ do
     echo "GO" >> $fname
     for f in $(find $dir -type f -name '*.sql' | sort)
     do
-        f=${f/./C:\\Money\\MoneySql}
+        f=${f/./D:\\MoneyDev\\MoneySql}
         echo ":r ${f//\//\\}" >> $fname
         echo "GO" >> $fname
     done

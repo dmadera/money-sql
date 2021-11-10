@@ -8,15 +8,16 @@ SELECT
 	CASE
 		WHEN PocitatProdej = 0 THEN -1
 		WHEN ZasobaAVG.Zasoba_ID IS NULL THEN 0
-		WHEN DATEDIFF(dd, ZasobaAVG.PrvniPohyb, GETDATE()) = 0 THEN 0
-		ELSE ROUND(ZasobaAVG.SumMnozstvi / DATEDIFF(dd, ZasobaAVG.PrvniPohyb, GETDATE()) * 14, 0) 
+		WHEN DATEDIFF(dd, ZasobaAVG.PrvniPohyb, GETDATE()) <= 0 THEN 0
+		ELSE ROUND(ZasobaAVG.SumMnozstvi / DATEDIFF(dd, PrvniPohyb.Datum, GETDATE()) * 14, 0) 
 	END AS ProdejAvg,
-	CASE
+	/*CASE
 		WHEN PocitatProdej = 0 THEN -1
 		WHEN ZasobaMED.Zasoba_ID IS NULL THEN 0
 		WHEN DATEDIFF(dd, ZasobaMED.PrvniPohyb, GETDATE()) = 0 THEN 0
-		ELSE ROUND(ZasobaMED.SumMedian / DATEDIFF(dd, ZasobaMED.PrvniPohyb, GETDATE()) * 14, 0) 
-	END AS ProdejMed
+		ELSE ROUND(ZasobaMED.SumMedian / DATEDIFF(dd, PrvniPohyb.Datum, GETDATE()) * 14, 0) 
+	END AS ProdejMed*/
+	0 AS ProdejMed
 FROM Sklady_Zasoba AS Zasoba WITH(NOLOCK) 
 LEFT JOIN (
 	SELECT 
@@ -30,13 +31,20 @@ LEFT JOIN (
 LEFT JOIN (
 	SELECT 
 		Pohyb.Konto_ID AS Zasoba_ID, 
+		MIN(Pohyb.Datum) AS Datum
+	FROM Sklady_PohybZasoby AS Pohyb WITH(NOLOCK)
+	GROUP BY Pohyb.Konto_ID
+) AS PrvniPohyb ON PrvniPohyb.Zasoba_ID = Zasoba.ID
+LEFT JOIN (
+	SELECT 
+		Pohyb.Konto_ID AS Zasoba_ID, 
 		SUM(Pohyb.Mnozstvi) AS SumMnozstvi,
 		MIN(Pohyb.Datum) AS PrvniPohyb
 	FROM Sklady_PohybZasoby AS Pohyb WITH(NOLOCK)
 	WHERE Pohyb.DruhPohybu = 1
 	GROUP BY Pohyb.Konto_ID
 ) AS ZasobaAVG ON ZasobaAVG.Zasoba_ID = Zasoba.ID
-LEFT JOIN (
+/*LEFT JOIN (
 	SELECT 
 		Zas.ID AS Zasoba_ID, 
 		MAX(Median.Median) * COUNT(Zas.ID) AS SumMedian, 
@@ -51,4 +59,4 @@ LEFT JOIN (
 		WHERE Pohyb.DruhPohybu = 1
 	) AS Median ON Median.Zasoba_ID = Zas.ID
 	GROUP BY Zas.ID
-) AS ZasobaMED ON ZasobaMED.Zasoba_ID = Zasoba.ID;
+) AS ZasobaMED ON ZasobaMED.Zasoba_ID = Zasoba.ID*/;

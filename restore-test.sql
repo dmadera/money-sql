@@ -5,15 +5,30 @@ ALTER DATABASE S4_Agenda_PEMA_test SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 GO
 
 RESTORE FILELISTONLY
-   FROM disk = '\\DBSERVER\Backup\S4_Agenda_PEMA.bak';
+   FROM disk = 'D:\MSSQL\Backup\S4_Agenda_PEMA.bak';
 RESTORE DATABASE S4_Agenda_PEMA_test 
-   FROM DISK = '\\DBSERVER\Backup\S4_Agenda_PEMA.bak'
+   FROM DISK = 'D:\MSSQL\Backup\S4_Agenda_PEMA.bak'
    WITH REPLACE,
-   MOVE 'S4_Agenda_PEMA' TO 'D:\MSSQL\MSSQL15.MSSQLSERVER\MSSQL\DATA\S4_Agenda_PEMA_test.mdf', 
-   MOVE 'S4_Agenda_PEMA_log' TO 'D:\MSSQL\MSSQL15.MSSQLSERVER\MSSQL\DATA\S4_Agenda_PEMA_test_log.ldf', 
+   MOVE 'S4_Agenda_PEMA' TO 'D:\MSSQL\Data\S4_Agenda_PEMA_test.mdf', 
+   MOVE 'S4_Agenda_PEMA_log' TO 'D:\MSSQL\Data\S4_Agenda_PEMA_test_log.ldf', 
    stats = 5;
 
 ALTER DATABASE S4_Agenda_PEMA_test SET MULTI_USER;
+GO
+
+ALTER DATABASE S4_Agenda_PEMA_test_Doc SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+GO
+
+RESTORE FILELISTONLY
+   FROM disk = 'D:\MSSQL\Backup\S4_Agenda_PEMA_Doc.bak';
+RESTORE DATABASE S4_Agenda_PEMA_test_Doc
+   FROM DISK = 'D:\MSSQL\Backup\S4_Agenda_PEMA_Doc.bak'
+   WITH REPLACE,
+   MOVE 'S4_Agenda_PEMA_Doc' TO 'D:\MSSQL\Data\S4_Agenda_PEMA_test_Doc.mdf', 
+   MOVE 'S4_Agenda_PEMA_Doc_log' TO 'D:\MSSQL\Data\S4_Agenda_PEMA_test_Doc_log.ldf', 
+   stats = 5;
+
+ALTER DATABASE S4_Agenda_PEMA_test_Doc SET MULTI_USER;
 GO
 
 USE S4_Agenda_PEMA_test;
