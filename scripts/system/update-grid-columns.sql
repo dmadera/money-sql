@@ -10,42 +10,68 @@ EXECUTE USER_System_Grid_Column
 	'DodaciListVydany', 'Adresar_Firma', 'AdFi.KreditFa_UserData', 'KreditFa_UserData', 'Kredit FA', 0;
 EXECUTE USER_System_Grid_Column 
 	'DodaciListVydany', 'Adresar_Firma', 'AdFi.NahradniPlneni_UserData', 'NahradniPlneni_UserData', 'Odbìratel NP', 0;
+EXECUTE USER_System_Grid_Column 
+	'DodaciListVydany', 'SkladovyDoklad_DodaciListVydany', 'SkDLVy.StavExpedice', 'StavExpedice', 'Stav expedice', 0;
 
 -- PolozkaObjednavkyPrijate
 EXECUTE USER_System_Grid_Column 
 	'PolozkaObjednavkyPrijate', 'Artikly_Artikl', 'ArAr.BaleniMnozstvi_UserData', 'BaleniMnozstvi_UserData', 'Balení množství', 0;
 EXECUTE USER_System_Grid_Column 
 	'PolozkaObjednavkyPrijate', 'Artikly_Artikl', 'ArAr.BaleniJednotky_UserData', 'BaleniJednotky_UserData', 'Balení jednotky', 0;
+EXECUTE USER_System_Grid_Column 
+	'PolozkaObjednavkyPrijate', 'Artikly_Artikl', 'ArAr.BaleniMnozstviKart_UserData', 'BaleniMnozstviKart_UserData', 'Balení množství kart', 0;
+EXECUTE USER_System_Grid_Column 
+	'PolozkaObjednavkyPrijate', 'Artikly_Artikl', 'ArAr.BaleniJednotkyKart_UserData', 'BaleniJednotkyKart_UserData', 'Balení jednotky kart', 0;
 
--- PolozkaObjednavkyPrijate
+-- PolozkaObjednavkyVydane
 EXECUTE USER_System_Grid_Column 
 	'PolozkaObjednavkyVydane', 'Artikly_Artikl', 'ArAr.BaleniMnozstvi_UserData', 'BaleniMnozstvi_UserData', 'Balení množství', 0;
 EXECUTE USER_System_Grid_Column 
 	'PolozkaObjednavkyVydane', 'Artikly_Artikl', 'ArAr.BaleniJednotky_UserData', 'BaleniJednotky_UserData', 'Balení jednotky', 0;
+EXECUTE USER_System_Grid_Column 
+	'PolozkaObjednavkyVydane', 'Artikly_Artikl', 'ArAr.BaleniMnozstviKart_UserData', 'BaleniMnozstviKart_UserData', 'Balení množství kart', 0;
+EXECUTE USER_System_Grid_Column 
+	'PolozkaObjednavkyVydane', 'Artikly_Artikl', 'ArAr.BaleniJednotkyKart_UserData', 'BaleniJednotkyKart_UserData', 'Balení jednotky kart', 0;
 
 -- PolozkaDodacihoListuVydanehoMetadataTemplate
 EXECUTE USER_System_Grid_Column 
 	'PolozkaDodacihoListuVydanehoMetadataTemplate', 'Artikly_Artikl', 'ArAr.BaleniMnozstvi_UserData', 'BaleniMnozstvi_UserData', 'Balení množství', 0;
 EXECUTE USER_System_Grid_Column 
 	'PolozkaDodacihoListuVydanehoMetadataTemplate', 'Artikly_Artikl', 'ArAr.BaleniJednotky_UserData', 'BaleniJednotky_UserData', 'Balení jednotky', 0;
+EXECUTE USER_System_Grid_Column 
+	'PolozkaDodacihoListuVydanehoMetadataTemplate', 'Artikly_Artikl', 'ArAr.BaleniMnozstviKart_UserData', 'BaleniMnozstviKart_UserData', 'Balení množství kart', 0;
+EXECUTE USER_System_Grid_Column 
+	'PolozkaDodacihoListuVydanehoMetadataTemplate', 'Artikly_Artikl', 'ArAr.BaleniJednotkyKart_UserData', 'BaleniJednotkyKart_UserData', 'Balení jednotky kart', 0;
 
 -- PolozkaProdejkyVydaneMetadataTemplate
 EXECUTE USER_System_Grid_Column 
 	'PolozkaProdejkyVydaneMetadataTemplate', 'Artikly_Artikl', 'ArAr.BaleniMnozstvi_UserData', 'BaleniMnozstvi_UserData', 'Balení množství', 0;
 EXECUTE USER_System_Grid_Column 
 	'PolozkaProdejkyVydaneMetadataTemplate', 'Artikly_Artikl', 'ArAr.BaleniJednotky_UserData', 'BaleniJednotky_UserData', 'Balení jednotky', 0;
+EXECUTE USER_System_Grid_Column 
+	'PolozkaProdejkyVydaneMetadataTemplate', 'Artikly_Artikl', 'ArAr.BaleniMnozstviKart_UserData', 'BaleniMnozstviKart_UserData', 'Balení množství kart', 0;
+EXECUTE USER_System_Grid_Column 
+	'PolozkaProdejkyVydaneMetadataTemplate', 'Artikly_Artikl', 'ArAr.BaleniJednotkyKart_UserData', 'BaleniJednotkyKart_UserData', 'Balení jednotky kart', 0;
 
 -- PolozkaDodacihoListuPrijatehoMetadataTemplate
 EXECUTE USER_System_Grid_Column 
 	'PolozkaDodacihoListuPrijatehoMetadataTemplate', 'Artikly_Artikl', 'ArAr.BaleniMnozstvi_UserData', 'BaleniMnozstvi_UserData', 'Balení množství', 0;
 EXECUTE USER_System_Grid_Column 
 	'PolozkaDodacihoListuPrijatehoMetadataTemplate', 'Artikly_Artikl', 'ArAr.BaleniJednotky_UserData', 'BaleniJednotky_UserData', 'Balení jednotky', 0;
+EXECUTE USER_System_Grid_Column 
+	'PolozkaDodacihoListuPrijatehoMetadataTemplate', 'Artikly_Artikl', 'ArAr.BaleniMnozstviKart_UserData', 'BaleniMnozstviKart_UserData', 'Balení množství kart', 0;
+EXECUTE USER_System_Grid_Column 
+	'PolozkaDodacihoListuPrijatehoMetadataTemplate', 'Artikly_Artikl', 'ArAr.BaleniJednotkyKart_UserData', 'BaleniJednotkyKart_UserData', 'Balení jednotky kart', 0;
 
 -- Zasoba
 EXECUTE USER_System_Grid_Column 
 	'Zasoba', 'Artikly_Artikl', 'ArAr.BaleniMnozstvi_UserData', 'BaleniMnozstvi_UserData', 'Balení množství', 0;
 EXECUTE USER_System_Grid_Column 
 	'Zasoba', 'Artikly_Artikl', 'ArAr.BaleniJednotky_UserData', 'BaleniJednotky_UserData', 'Balení jednotky', 0;
+EXECUTE USER_System_Grid_Column 
+	'Zasoba', 'Artikly_Artikl', 'ArAr.BaleniMnozstviKart_UserData', 'BaleniMnozstviKart_UserData', 'Balení množství kart', 0;
+EXECUTE USER_System_Grid_Column 
+	'Zasoba', 'Artikly_Artikl', 'ArAr.BaleniJednotkyKart_UserData', 'BaleniJednotkyKart_UserData', 'Balení jednotky kart', 0;
 EXECUTE USER_System_Grid_Column 
 	'Zasoba', 'Ceniky_PolozkaCeniku', 'CePo.Marze_UserData', 'Marze_UserData', 'Marže', 0, 1;
 
@@ -88,6 +114,8 @@ EXECUTE USER_System_Grid_Column
 	'ProdejkaVydana', 'EconomicBase_NavazujiciDoklad', 'EcNa.PopisCil', 'PopisCil', 'Navazující pokladní doklad', 0;
 EXECUTE USER_System_Grid_Column 
 	'ProdejkaVydana', 'Adresar_Firma', 'AdFi.Nazev', 'AdFiNazev', 'Firma zažadit jako', 0;
+EXECUTE USER_System_Grid_Column 
+	'ProdejkaVydana', 'SkladovyDoklad_ProdejkaVydana', 'SkPrV.StavExpedice', 'StavExpedice', 'Stav expedice', 0;
 
 -- PohybZasoby
 UPDATE MetaData_GridTables SET

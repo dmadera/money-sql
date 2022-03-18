@@ -168,7 +168,7 @@ IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
 		WHERE T.TableName = 'Adresar_Firma' AND O.ObjectName = 'ObjednavkaPrijata';
 
 UPDATE MetaData_GridColors SET
-	Condition = '([KreditFa_UserData] = '''' OR [ZpusobPlatbyESHOP_UserData] = ''Hotovì'')',
+	Condition = '([KreditFa_UserData] = '''')',
 	Priority = 50,
 	BackColor = -1, 
 	FontColor = @Black, 
@@ -185,7 +185,7 @@ IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
 		WHERE T.TableName = 'Adresar_Firma' AND O.ObjectName = 'Firma';
 
 UPDATE MetaData_GridColors SET
-	Condition = '([KreditFa_UserData] LIKE ''FA%'' )',
+	Condition = '([KreditFa_UserData] LIKE ''FA%'')',
 	Priority = 50,
 	BackColor = -1, 
 	FontColor = @GreenDark, 

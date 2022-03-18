@@ -3,5 +3,7 @@ UPDATE System_UserSettings SET
 	PositionDetailTabs = 1,
 	SumovatPoPridaniVsechPolozek = 0,
 	AllowDragDropInTreeList = 0,
-	FilterLists = 1
+	FilterLists = 1,
+	AdrAutoAres = 1,
+	AdrAutoAresEx = 0 
 FROM S4_System.dbo.System_UserSettings;

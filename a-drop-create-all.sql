@@ -29,6 +29,14 @@ GO
 GO
 :r D:\MoneyDev\MoneySql\a1-views\view-user-posledni-prijmy-zasoby.sql
 GO
+:r D:\MoneyDev\MoneySql\a1-views\view-user-s5-sklady-pohyb-zasoby-prehled.sql
+GO
+:r D:\MoneyDev\MoneySql\a1-views\view-user-web-expedicni-prikazy.sql
+GO
+:r D:\MoneyDev\MoneySql\a1-views\view-user-web-katalog.sql
+GO
+:r D:\MoneyDev\MoneySql\a1-views\view-user-web-pohyby.sql
+GO
 :r D:\MoneyDev\MoneySql\a1-views\view-user-z-polozky-ceniku.sql
 GO
 :r D:\MoneyDev\MoneySql\a1-views\view-user-zasoby-prodej.sql
@@ -36,6 +44,8 @@ GO
 PRINT 'Creating objects from dir ./a2-procedures.';
 GO
 :r D:\MoneyDev\MoneySql\a2-procedures\proc-user-katalog-jednotky.sql
+GO
+:r D:\MoneyDev\MoneySql\a2-procedures\proc-user-web-zmena-stavu-expedice.sql
 GO
 :r D:\MoneyDev\MoneySql\a2-procedures\proc-user-zasoba-prodejnost.sql
 GO
@@ -54,8 +64,6 @@ GO
 :r D:\MoneyDev\MoneySql\a2-triggers\tr-ceniky-polozka-ceniku-after-delete.sql
 GO
 :r D:\MoneyDev\MoneySql\a2-triggers\tr-ceniky-polozka-ceniku-after-insert-update.sql
-GO
-:r D:\MoneyDev\MoneySql\a2-triggers\tr-fakturace-polozka-faktury-vydane-after-insert-update.sql
 GO
 :r D:\MoneyDev\MoneySql\a2-triggers\tr-objednavky-polozka-nabidky-vydane-after-insert-update.sql
 GO

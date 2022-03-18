@@ -1,5 +1,5 @@
 DECLARE @SearchStr nvarchar(100)
-SET @SearchStr = 'font'
+SET @SearchStr = '615'
  
  
 -- Copyright © 2002 Narayana Vyas Kondreddi. All rights reserved.

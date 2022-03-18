@@ -38,7 +38,7 @@ BEGIN
 		@AkcniCenik_ID, 0, 0, 0,
 		ISNULL(Art.Modify_ID, Art.Create_ID), ISNULL(Art.Modify_Date, Art.Create_Date),
 		Art.ID, VychoziCena.Cena, Art.Kod, Art.Nazev, 0, 0, 
-		0, VychoziCena.Cena, @VychoziCenik_ID, 3, 0, 
+		0, VychoziCena.Cena, @VychoziCenik_ID, 0, 0, 
 		0, '', @AkcniCenik_ID, 1, 0, 1,
 		1, 0, 0, 0, 
 		0, 0, 0
