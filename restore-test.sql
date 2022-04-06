@@ -31,8 +31,13 @@ RESTORE DATABASE S4_Agenda_PEMA_test_Doc
 ALTER DATABASE S4_Agenda_PEMA_test_Doc SET MULTI_USER;
 GO
 
+DECLARE @Agenda_ID NVARCHAR(50)
+SET @Agenda_ID = (SELECT ID FROM S4_System.dbo.System_Agenda WHERE CatalogName = 'S4_Agenda_PEMA_test')
+
 USE S4_Agenda_PEMA_test;
 UPDATE System_AgendaDetail SET
+	Parent_ID = @Agenda_ID,
+	Root_ID = @Agenda_ID,
 	AgnBackColorEnabled = 1,
 	A1 = 255,
 	R1 = 255, 
