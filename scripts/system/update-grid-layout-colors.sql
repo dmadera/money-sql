@@ -36,7 +36,7 @@ IF NOT EXISTS(SELECT TOP 1 ID FROM MetaData_GridColors WHERE Name = @Name)
 		WHERE Obj.ObjectName = 'Zasoba';
 
 UPDATE MetaData_GridColors SET
-	Condition = '[ProdejMinAVG_UserData] > [ZustatekMnozstvi] + [Objednano]',
+	Condition = '[ProdejMinAVG_UserData] > [ZustatekMnozstvi] + [Objednano] - [Rezervovano]',
 	Priority = 100,
 	BackColor = -1, 
 	FontColor = @Bordo, 

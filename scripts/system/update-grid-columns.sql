@@ -5,6 +5,10 @@ GO
 EXECUTE USER_System_Grid_Column 
 	'ObjednavkaPrijata', 'Adresar_Firma', 'AdFi.KreditFa_UserData', 'KreditFa_UserData', 'Kredit FA', 0;
 
+-- FakturaVydana
+EXECUTE USER_System_Grid_Column 
+	'FakturaVydana', 'Fakturace_FakturaVydana', 'FaFa.Poznamka', 'Poznamka', 'Poznámka', 0;
+
 -- DodaciListVydany
 EXECUTE USER_System_Grid_Column 
 	'DodaciListVydany', 'Adresar_Firma', 'AdFi.KreditFa_UserData', 'KreditFa_UserData', 'Kredit FA', 0;

@@ -1,3 +1,5 @@
+use S4_System;
+
 select
 	C.ID,
 	O.ObjectName,
@@ -14,7 +16,7 @@ select
 from MetaData_GridColumns C
 inner join MetaData_GridTables T ON T.ID = C.Table_ID
 inner join MetaData_Objects O ON O.ID = C.Object_ID
-where O.ObjectName LIKE '%prodejkav%'
+where O.ObjectName LIKE '%FakturaVydana%'
 --where T.TableLocation <> 1
 order by C.ColumnCaption 
 

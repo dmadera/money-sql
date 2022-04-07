@@ -22,6 +22,8 @@ SELECT
 	END, 2) AS MarzePosledniNakup,
 	ROUND(CASE
 		WHEN Cenik.Kod = '_NAKUP' THEN StavZas.ZustatekJednotkaCena
+		WHEN Cenik.Kod = '_PRODEJ' THEN VychoziCena.Cena
+		WHEN Cenik.Kod = '_AKCE' THEN VychoziCena.Cena
 		ELSE Cena.Cena
 	END, 2) AS Cena,
 	ROUND(CASE
@@ -43,4 +45,5 @@ INNER JOIN dbo.Ceniky_PolozkaCeniku AS Cena (NOLOCK) ON Cena.Artikl_ID = Zasoba.
 INNER JOIN dbo.Ceniky_Cenik AS Cenik WITH (NOLOCK) ON Cenik.ID = Cena.Cenik_ID
 LEFT JOIN USER_PosledniPrijemZasoby PoslPrijem WITH(NOLOCK) ON PoslPrijem.Zasoba_ID = Zasoba.ID
 INNER JOIN dbo.Sklady_StavZasoby AS StavZas WITH (NOLOCK) ON StavZas.ID = Zasoba.AktualniStav_ID
+INNER JOIN Ceniky_PolozkaCeniku VychoziCena WITH(NOLOCK) ON VychoziCena.Artikl_ID = Cena.Artikl_ID AND VychoziCena.Cenik_ID = (SELECT TOP 1 Agenda.VychoziCenik_ID FROM System_AgendaDetail AS Agenda)
 WHERE (Zasoba.Deleted = 0) AND (Cena.Deleted = 0 OR Cena.Deleted IS NULL);
